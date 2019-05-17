@@ -654,6 +654,68 @@ end; /
 
 ### 커서
 
+1. 암시적 커서
+2. 명시적 커서
+
+
+
+**암시적 커서의 속성**
+
+* - SQL%ROWCOUNT : 해당 SQL 문에 영향을 받는 행의 수
+* - SQL%FOUND : 해당 SQL 영향을 받는 행의 수가 한 개 이상일 경우 TRUE
+* - SQL%NOTFOUND : 해당 SQL 문에 영향을 받는 행의 수가 없을 경우 TRUE
+* - SQL%ISOPEN : 항상 FALSE, 암시적 커서가 열려 있는지의 여부 검색
+
+```sql
+CREATE OR REPLACE PROCEDURE Implicit_Cursor
+        (p_empno IN emp.empno%TYPE)
+
+    IS
+
+        v_sal  emp.sal%TYPE;
+        v_update_row NUMBER;
+
+    BEGIN
+
+        SELECT sal
+        INTO v_sal
+        FROM emp
+        WHERE empno = p_empno;
+
+        -- 검색된 데이터가 있을경우
+        IF  SQL%FOUND THEN     
+            DBMS_OUTPUT.PUT_LINE('검색한 데이터가 존재합니다 : '||v_sal);
+        END IF;
+
+        UPDATE emp
+        SET sal = sal*1.1
+        WHERE empno = p_empno;
+
+        -- 수정한 데이터의 카운트를 변수에 저장
+        v_update_row := SQL%ROWCOUNT;
+        DBMS_OUTPUT.PUT_LINE('급여가 인상된 사원 수 : '|| v_update_row);
+        
+        EXCEPTION    
+           WHEN   NO_DATA_FOUND  THEN  
+           DBMS_OUTPUT.PUT_LINE(' 검색한 데이터가 없네요... ');
+        
+    END;
+    /
+ 
+-- DBMS_OUTPUT.PUT_LINE을 출력하기 위해 사용
+SQL> SET SERVEROUTPUT ON ;  
+
+-- 프로시저 실행
+SQL> EXECUTE Implicit_Cursor(7369);
+
+검색한 데이터가 존재합니다 : 880
+급여가 인상된 사원 수 : 1
+```
+
+
+
+**명시적 커서**
+
 커서의 내용을 미리 정의 해 놓고 사용하는 방법.
 
 ```sql
