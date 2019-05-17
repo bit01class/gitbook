@@ -332,23 +332,58 @@ end; / select \* from row\_test;
 
      \*/
 
+```sql
 set SERVEROUTPUT ON;
 
-declare tname varchar2\(20\);
+declare
+  tname varchar2(20);
+  
+  -- 정의
+  TYPE t_emp_name IS TABLE OF
+  employees.last_name%type
+  INDEX BY BINARY_INTEGER;
+  
+  -- 선언
+  v_name t_emp_name;
+begin
+  select last_name into tname
+  from employees
+  where employee_id = 100;
+  
+  -- 인덱스를 통해 접근
+  v_name(0) := tname;
+  DBMS_OUTPUT.PUT_LINE(v_name(0));
+end;
+/
 
--- 정의 TYPE t\_emp\_name IS TABLE OF employees.last\_name%type INDEX BY BINARY\_INTEGER;
+```
 
--- 선언 v\_name t\_emp\_name; begin select last\_name into tname from employees where employee\_id = 100;
+```sql
+declare
+  TYPE tbl_type IS TABLE OF
+    employees.last_name%type
+  INDEX BY BINARY_INTEGER;
+  
+  vtbl_type tbl_type;
+  a binary_integer := 0; -- 변수 a값을 0으로 초기화
+begin
+  for emp_name in(select last_name from employees) loop
+    a := a+1;
+    vtbl_type(a) := emp_name.last_name; 
+  end loop;
+  
+  for i in 1..a loop
+    DBMS_OUTPUT.PUT_LINE(vtbl_type(i));
+  end loop;
+end;
+/
+```
 
--- 인덱스를 통해 접근 v\_name\(0\) := tname; DBMS\_OUTPUT.PUT\_LINE\(v\_name\(0\)\); end; /
 
-declare TYPE tbl\_type IS TABLE OF employees.last\_name%type INDEX BY BINARY\_INTEGER;
 
-vtbl\_type tbl\_type; a binary\_integer := 0; -- 변수 a값을 0으로 초기화 begin for emp\_name in\(select last\_name from employees\) loop a := a+1; vtbl\_type\(a\) := emp\_name.last\_name; end loop;
+\[ 바인드 변수\(비 PL/SQL 변수\) \] 
 
-for i in 1..a loop DBMS\_OUTPUT.PUT\_LINE\(vtbl\_type\(i\)\); end loop; end; /
-
-/\* \[ 바인드 변수\(비 PL/SQL 변수\) \] : 호스트 환경에서 생성되어 데이터를 저장하기 때문에 호스트 변수라고 한다.
+:호스트 환경에서 생성되어 데이터를 저장하기 때문에 호스트 변수라고 한다.
 
 쿼리의 일부분 예를 들어 WHERE 절의 내용만 다른 쿼리를 실행해야 하는 경우가 종종 생길 것이다. 이러한 경우에 거의 비슷한 두번의 쿼리를 실행하는 비효율성을 해소하는 방법이 바로 바인드 변수의 사용이다. 바인드 변수는 입력 내용을 넣고 SQL로부터 출력 내용을 받아내는 방법으로, " 이 부분에 들어갈 정확한 값은 이후에 알려줄테니, 일단 내가 값을 넣었을 때 어떻게 실행할 것인지에 대해서 계획만 세워둬라 "는 명령을 오라클에 내리는 것이다.
 
@@ -359,25 +394,61 @@ select \* into temp from row\_test where no = :bind\_no; 이 부분이 있을 �
 * print명령을 이용하여 출력가능
 * :을 붙여 이용한다.
 
-  \*/
+```sql
+set autoprint on; -- print를 하지 않아도 자동으로 출력하도록 세팅하는 부분(default는 false로 되어있음)
 
-set autoprint on; -- print를 하지 않아도 자동으로 출력하도록 세팅하는 부분\(default는 false로 되어있음\)
+declare
+  temp row_test%ROWTYPE;
+begin
+  select * into temp from row_test where no = :bind_no;
+  insert into row_test3 values temp;
+end;
 
-declare temp row\_test%ROWTYPE; begin select \* into temp from row\_test where no = :bind\_no; insert into row\_test3 values temp; end;
-
-select \* from row\_test3;
+select * from row_test3;
 
 -- no에 1을 입력시 그에 해당되는 결과가 2를 입력하면 그에 해당하는 결과가 나오게 된다.
 
-begin select \(salary\*12+nvl\(commission\_pct,0\)\) into :vsal -- 결과값을 바인드 변수에 넣는다. from employees where employee\_id = 100; end; / -- print를 이용해서 PL/SQL블럭 밖에서도 출력할 수 있다. print vsal;
 
-create table row\_test3 as select  _from row\_test; truncate table row\_test3; select_  from row\_test3;
+begin
+  select (salary*12+nvl(commission_pct,0)) into :vsal -- 결과값을 바인드 변수에 넣는다.
+  from employees
+  where employee_id = 100;
+end;
+/
+-- print를 이용해서 PL/SQL블럭 밖에서도 출력할 수 있다.
+print vsal;
 
-declare type arrRecType IS TABLE OF row\_test%ROWTYPE INDEX BY binary\_integer;
 
-TestValue arrRecType; a binary\_integer := 0; begin for temp\_rec in \(select \* from row\_test\) loop a := a+1; TestValue\(a\) := temp\_rec; end loop;
+create table row_test3 as select * from row_test;
+truncate table row_test3;
+select * from row_test3;
 
-for i in 1..a loop insert into row\_test3 values TestValue\(i\); end loop; end; / select \* from row\_test3;
+declare
+  type arrRecType IS TABLE OF
+  row_test%ROWTYPE
+  INDEX BY binary_integer;
+  
+  TestValue arrRecType;
+  a binary_integer := 0;
+begin
+  for temp_rec in (select * from row_test) loop
+    a := a+1;
+    TestValue(a) := temp_rec;
+  end loop;
+  
+  for i in 1..a loop
+    insert into row_test3 values TestValue(i);
+  end loop;
+end;
+/
+select * from row_test3;
+```
+
+
+
+
+
+
 
 ### 조건문
 
@@ -390,39 +461,122 @@ for i in 1..a loop insert into row\_test3 values TestValue\(i\); end loop; end; 
 
   // case문 EX\) case 변수명 when 값1 then 실행명령; when 값2 then 실행명령; ... end; \*/
 
+```sql
 set serveroutput on;
 
--- if문 Ex\) declare emp\_id employees.employee\_id%type; emp\_name employees.last\_name%type; emp\_dept employees.department\_id%type; dept\_name varchar2\(20\) := null; begin select employee\_id, last\_name, department\_id into emp\_id,emp\_name,emp\_dept from employees where employee\_id = 124;
+-- if문 Ex)
+declare
+  emp_id employees.employee_id%type;
+  emp_name employees.last_name%type;
+  emp_dept employees.department_id%type;
+  dept_name varchar2(20) := null;
+begin
+  select employee_id, last_name, department_id
+  into emp_id,emp_name,emp_dept
+  from employees
+  where employee_id = 124;
+  
+  if(emp_dept = 50) then --if문 시작
+    dept_name := 'Shipping';
+  end if;
+  if(emp_dept = 60) then
+    dept_name := 'IT';
+  end if;
+  if(emp_dept = 70) then 
+    dept_name := 'Public Relation';
+  end if;
+  
+  DBMS_OUTPUT.PUT_LINE(emp_id||' '||emp_name||' '||emp_dept||' '||dept_name);
+end;
+/
 
-if\(emp\_dept = 50\) then --if문 시작 dept\_name := 'Shipping'; end if; if\(emp\_dept = 60\) then dept\_name := 'IT'; end if; if\(emp\_dept = 70\) then dept\_name := 'Public Relation'; end if;
 
-DBMS\_OUTPUT.PUT\_LINE\(emp\_id\|\|' '\|\|emp\_name\|\|' '\|\|emp\_dept\|\|' '\|\|dept\_name\); end; /
+declare
+  emp_id employees.employee_id%type;
+  emp_name employees.last_name%type;
+  emp_dept employees.department_id%type;
+  dept_name varchar2(20) := null;
+begin
+  select employee_id, last_name, department_id
+  into emp_id,emp_name,emp_dept
+  from employees
+  where employee_id = 103;
+  
+  if(emp_dept = 50) then 
+      dept_name := 'Shipping';
+    elsif(emp_dept = 60) then -- elseif가 아니라 elsif임을 주의...
+      dept_name := 'IT';
+    elsif(emp_dept = 70) then
+      dept_name := 'Public Relation';
+    ELSE 
+      dept_name := 'Other';
+  end if;
+  DBMS_OUTPUT.PUT_LINE(emp_id||' '||emp_name||' '||emp_dept||' '||dept_name);
+end;
+/
 
-declare emp\_id employees.employee\_id%type; emp\_name employees.last\_name%type; emp\_dept employees.department\_id%type; dept\_name varchar2\(20\) := null; begin select employee\_id, last\_name, department\_id into emp\_id,emp\_name,emp\_dept from employees where employee\_id = 103;
 
-if\(emp\_dept = 50\) then dept\_name := 'Shipping'; elsif\(emp\_dept = 60\) then -- elseif가 아니라 elsif임을 주의... dept\_name := 'IT'; elsif\(emp\_dept = 70\) then dept\_name := 'Public Relation'; ELSE dept\_name := 'Other'; end if; DBMS\_OUTPUT.PUT\_LINE\(emp\_id\|\|' '\|\|emp\_name\|\|' '\|\|emp\_dept\|\|' '\|\|dept\_name\); end; /
+declare
+  emp_id employees.employee_id%type;
+  emp_name employees.last_name%type;
+  emp_comm employees.commission_pct%type := null;
+begin
+  select employee_id, last_name, commission_pct
+  into emp_id, emp_name, emp_comm
+  from employees
+  where employee_id = 130;
+  
+  if (emp_comm > 0) then
+    dbms_output.put_line(emp_id||' 의 보너스는 '||emp_comm);
+  else
+    DBMS_OUTPUT.PUT_LINE(emp_id||'의 보너스는 없습니다.');
+  end if;
+end;
+/
 
-declare emp\_id employees.employee\_id%type; emp\_name employees.last\_name%type; emp\_comm employees.commission\_pct%type := null; begin select employee\_id, last\_name, commission\_pct into emp\_id, emp\_name, emp\_comm from employees where employee\_id = 130;
 
-if \(emp\_comm &gt; 0\) then dbms\_output.put\_line\(emp\_id\|\|' 의 보너스는 '\|\|emp\_comm\); else DBMS\_OUTPUT.PUT\_LINE\(emp\_id\|\|'의 보너스는 없습니다.'\); end if; end; /
+-- case문 EX)
 
--- case문 EX\)
+declare
+  emp_id employees.employee_id%type;
+  emp_name employees.last_name%type;
+  emp_dept employees.department_id%type;
+  dept_name varchar2(20) := null;
+begin
+  select employee_id, last_name, department_id
+  into emp_id, emp_name, emp_dept
+  from employees
+  where employee_id = &empno; --치환변수 이용해 사용자로부터 입력받음
+  
+  dept_name := case emp_dept
+                 when 50 then 'Shipping'
+                 when 60 then 'IT'
+                 when 70 then 'Public Relation'
+                 when 80 then 'Sales'
+               end;
+  DBMS_OUTPUT.PUT_LINE(dept_name);
+end;
+/
+```
 
-declare emp\_id employees.employee\_id%type; emp\_name employees.last\_name%type; emp\_dept employees.department\_id%type; dept\_name varchar2\(20\) := null; begin select employee\_id, last\_name, department\_id into emp\_id, emp\_name, emp\_dept from employees where employee\_id = &empno; --치환변수 이용해 사용자로부터 입력받음
 
-dept\_name := case emp\_dept when 50 then 'Shipping' when 60 then 'IT' when 70 then 'Public Relation' when 80 then 'Sales' end; DBMS\_OUTPUT.PUT\_LINE\(dept\_name\); end; /
+
+
 
 ### 반복문
 
-/\* \[ 반복문 \]
+1. basic loop문
+2. while문
+3. for문
 
-* basic loop문
-* while문
-* for문
+1. basic loop문\(조건을 나중에 검사\) : DO WHILE문과 유사 
 
-  \*/
+-- 형식 
 
--- 1. basic loop문\(조건을 나중에 검사\) : DO WHILE문과 유사 -- 형식 / _loop pl/sql문장; exit when\(조건\); end loop;_ /
+_`loop  
+  pl/sql문장;   
+  exit when(조건);   
+end loop;`_ 
 
 ```text
 -- 1~10까지 출력하기
@@ -438,7 +592,15 @@ end;
 /
 ```
 
--- 2. while문\(조건을 먼저 검사\) / _형식\) while 조건 loop 실행문장; end loop_ / declare num number := 1; begin while \(num &lt;= 10\) loop DBMS\_OUTPUT.PUT\_LINE\(num\); num := num + 1; end loop; end; /
+-- 2. while문\(조건을 먼저 검사\) 
+
+_형식\)_ 
+
+_`while 조건 loop 실행문장; end loop`_ `/ declare num number := 1;  
+ begin while (num <= 10) loop DBMS_OUTPUT.PUT_LINE(num);  
+ num := num + 1;  
+ end loop;`   
+__`end;` 
 
 ```text
 declare
@@ -463,7 +625,8 @@ end;
 /
 ```
 
--- 3. FOR문 : 반복횟수를 지정할 수 있다. / _형식\) java의 FOR EACH문과 유사! IN뒤에 나온 것이 순차적으로 i에 들어가는 개념 FOR i IN start..end loop 실행문장 end loop;_ / declare
+-- 3. FOR문 : 반복횟수를 지정할 수 있다. /   
+_형식\) java의 FOR EACH문과 유사! IN뒤에 나온 것이 순차적으로 i에 들어가는 개념 FOR i IN start..end loop 실행문장 end loop;_ / declare
 
 begin FOR i IN 1..10 loop DBMS\_OUTPUT.PUT\_LINE\(i\); end loop; end; /
 
@@ -493,13 +656,42 @@ end; /
 
 커서의 내용을 미리 정의 해 놓고 사용하는 방법.
 
-DECLARE CURSOR C\_LIST IS SELECT MY\_ID FROM MY\_TABLE WHERE 조건; BEGIN
+```sql
+DECLARE
+  CURSOR C_LIST IS
+    SELECT MY_ID FROM MY_TABLE WHERE 조건;
+BEGIN
 
-FOR I\_ID IN C\_LIST LOOP DBMS\_OUTPUT.put\_line\(I\_ID\); END LOOP; END; 비추천 커서의 내용을 정할 때 select 문제 동적으로 parameter가 넘어가야 할 경우 사용이 불가능 하다. 왜냐하면 BEGIN 전에 정의하기 때문이다.
+  FOR I_ID IN C_LIST LOOP
+    DBMS_OUTPUT.put_line(I_ID);
+  END LOOP;
+END;
+```
 
-커서 변수를 미리 만들어 놓고 불러서 사용하는 방법. DECLARE I\_ID VARCHAR2\(100\); -- 변수 정의  
-C\_LIST SYS\_REFCURSOR; -- 커서 정의 BEGIN OPEN C\_LIST FOR SELECT MY\_ID  
-FROM MY\_TABLE WHERE 조건; LOOP -- LOOP 돌기. FETCH C\_LIST INTO I\_ID; -- 하나씩 변수에 넣기. EXIT WHEN C\_LIST%NOTFOUND; -- 더이상 없으면 끝내기. DBMS\_OUTPUT.put\_line\(I\_ID\); -- 출력 END LOOP; CLOSE C\_LIST; END; 재사용성이 있어서 나름 괜찮음. 커서를 정의 한 뒤 그 때 그 때 커서의 내용을 채우는 방법이다.
+_커서의 내용을 정할 때 select 문제 동적으로 parameter가 넘어가야 할 경우 사용이 불가능 하다. 왜냐하면 BEGIN 전에 정의하기 때문이다._
+
+커서 변수를 미리 만들어 놓고 불러서 사용하는 방법. 
+
+```sql
+DECLARE
+	I_ID   VARCHAR2(100);		-- 변수 정의				
+  C_LIST SYS_REFCURSOR;		-- 커서 정의
+BEGIN
+  OPEN C_LIST FOR
+  SELECT MY_ID   
+    FROM MY_TABLE
+    WHERE 조건;
+  LOOP					-- LOOP 돌기.
+      FETCH C_LIST
+      INTO  I_ID;			--  하나씩 변수에 넣기.
+      EXIT WHEN C_LIST%NOTFOUND;	-- 더이상 없으면 끝내기.
+      DBMS_OUTPUT.put_line(I_ID);    --  출력
+  END LOOP;
+  CLOSE C_LIST;
+END;
+```
+
+재사용성이 있어서 나름 괜찮음. 커서를 정의 한 뒤 그 때 그 때 커서의 내용을 채우는 방법이다.
 
 ### 예외
 
