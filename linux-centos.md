@@ -29,21 +29,24 @@
 
 
 
+### Java
 
-Java
-```
+```bash
 wget jdk-8u131-linux-x64.rpm
 rpm -ivh jdk-8u131-linux-x64.rpm
 alternatives --config java
 ```
 
-Tomcat
-```
+
+
+### Tomcat
+
+```bash
 >yum list installed
 >yum list | grep tomcat
 >yum install -y tomcat*
-```
-```
+
+
 >cd /usr/share/tomcat
 >ls -al
 drwxrwxr-x.   3 root tomcat   91  1월  1 00:00 .
@@ -56,15 +59,27 @@ lrwxrwxrwx.   1 root tomcat   22  1월  1 00:00 temp -> /var/cache/tomcat/temp
 lrwxrwxrwx.   1 root tomcat   23  1월  1 00:00 webapps -> /var/lib/tomcat/webapps
 lrwxrwxrwx.   1 root tomcat   22  1월  1 00:00 work -> /var/cache/tomcat/work
 ```
-```
+
+
+
+```text
 $ firewall-cmd --permanent --add-port=8080/tcp 
 $ firewall-cmd --reload
 ## 부팅시 실행
 $ systemctl enable tomcat
 ## 서비스 시작
 $ systemctl start tomcat
-
 ```
+
+
+
+
+
+
+
+
+
+
 
 
 
