@@ -757,113 +757,86 @@ END;
 
 ### 예외
 
-에러 의 종류 \] 1. 컴파일 에러 : PL/SQL 블럭이 파싱\(Parsing\)될 때 "사용자 오타" 등으로 인해 발생되는 에러. \(Compile Error\) 2. 런타임 에러\(=Exception\) : PL/SQL 블럭이 실행되는 동안 발생하는 에러로 일반적으로 런타임에러를 "Exception"이라 부른다. 종류\) a. 오라클 예외 : 오라클에서 제공되는 예외\(Predefined ORACLE Exception과 Non-Predefined ORACLE Exception이 있다.\) ㄱ. Predefined ORACLE Exception : 사전에 정해진 예외 종류\)
+```text
+종류
+      1. 컴파일 에러 : PL/SQL 블럭이 파싱(Parsing)될 때 "사용자 오타" 등으로 인해 발생되는 에러.
+        (Compile Error)
+      2. 런타임 에러(=Exception)
+          : PL/SQL 블럭이 실행되는 동안 발생하는 에러로 일반적으로 런타임에러를 "Exception"이라 부른다.
+            종류)
+              a. 오라클 예외 
+                  : 오라클에서 제공되는 예외(Predefined ORACLE Exception과 Non-Predefined ORACLE Exception이 있다.)
+                    ㄱ. Predefined ORACLE Exception 
+                          : 사전에 정해진 예외
+                          종류)
+                            - ACCESS_INTO_NULL 
+                                : 정의되지 않은 오브젝트 속성에 값을 할당하고자 했을 때 발생하는 예외.                      
+                            - CASE_NOT_FOUND 
+                                : CASE문의 when절에 해당되는 조건이 없고 else절도 없을 경우 발생
+                            - COLLECTION_IS_NULL 
+                                : 선언되지 않은 컬렉션(nested table, varray)에 존재하는 메서드
+                                                   이외의 메서드를 사용했을 때 발생되는 예외.
+                            - CURSOR_ALREADY_OPEN 
+                                : 이미 열려진 커서를 열려고 시도 했을 때 발생하는 예외
+                            - DUP_VAL_ON_INDEX 
+                                : 유일인덱스에 중복값을 입력햇을 때 발생하는 예외.
+                            - INVALID_CURSOR 
+                                : 잘못된 커서 조작이 샐행될 때 발생되는 예외.
+                            - INVALID_NUMBER 
+                                : 문자를 숫자로의 변환 시 실패가 될 때 발생하는 예외.
+                            - LOGIN_DENIED 
+                                : 잘못된 사용자명이나 암호로 로그인시도시 발생하는 예외.
+                            - NO_DATA_FOUND 
+                                : PL/SQL Select문이 한 건도 리턴하지 못하는 경우 발생하는 예외.
+                            - NOT_LOGGED ON 
+                                : 접속되지 않은 상태에서 데이터베이스에 대한 요청이 PL/SQL 프로그램으로
+                                  실행된 경우 발생되는 예외.
+                            - PROGRAM_ERROR 
+                                : PL/SQL이 내부적인 문제를 가지고 있는 경우 발생되는 예외.
+                            - ROWTYPE_MISMATCH 
+                                : 할당문에서 호스트 커서 변수와 PL/SQL 커서 변수의 데이터 형이 불일치할 때 발생되는 예외
+                            - STORAGE_ERROR 
+                                : PL/SQL이 실행될 때 메모리가 부족하거나 메모리상에 문제가 일어났을 대 발생하는 예외.
+                            - SUBSCRIPT_BEYOND_COUNT 
+                                : 컬렉션의 요소 갯수보다 더 큰 첨자 값으로 참조한 경우 발생
+                            - SUBSCRIPT_OUTSIDE_LIMIT 
+                                : 컬렉션의 첨자 한계를 벗어난 참조가 일어났을 때 발생
+                            - SYS_INVALID_ROWD 
+                                : 문자열을 ROWID로 변환할 때 무효한 문자열의 표현일 경우 발생되는 예외.
+                            - TIMEOUT_ON_RESOURCE 
+                                : 자원에 대한 대기시간이 초과했을 때 발생하는 예외.
+                            - TOO_MANY_ROWS 
+                                : PL/SQL select문이 두건이상의 행을 리턴햇을 때 발생되는 예외.
+                            - VALUE_ERROR 
+                                : 산술,변환,절삭 크기 제약에 에러가 생겼을 때 발생되는 예외.
+                            - ZERO_DIVIDE
+                                : 0으로 나누려 했을 때 발생하는 예외.
+                  
+                    ㄴ. Non-predefined ORACLE Exception
+                          : 사전에 정해지지 않은 예외
+              b. 사용자 정의 예외
+                  : 사용자에 의해 정의되는 예외
+                    사용자 정의 예외 사용 예)
+                      declare (선언부에서)
+                      예외명 exception;
+                      begin부나 exception부에서 raise문을 이용해서 예외를 발생시킨다.
+                      
+                      - 예외처리부 형식)
+                          -- 예외처리부 : 예외 발생시 어떻게 처리할 것인지에 예외처리 내용이 들어간다.
+                        Exception
+                          when 예외명 then
+                            실행문...
+                          when 예외명2 then
+                            실행문...
+                          when OTHERS then
+                            실행문...
+```
 
-* ACCESS\_INTO\_NULL 
 
-    : 정의되지 않은 오브젝트 속성에 값을 할당하고자 했을 때 발생하는 예외.                      
 
-* CASE\_NOT\_FOUND 
 
-    : CASE문의 when절에 해당되는 조건이 없고 else절도 없을 경우 발생
 
-* COLLECTION\_IS\_NULL 
 
-    : 선언되지 않은 컬렉션\(nested table, varray\)에 존재하는 메서드
-
-  ```text
-                   이외의 메서드를 사용했을 때 발생되는 예외.
-  ```
-
-* CURSOR\_ALREADY\_OPEN 
-
-    : 이미 열려진 커서를 열려고 시도 했을 때 발생하는 예외
-
-* DUP\_VAL\_ON\_INDEX 
-
-    : 유일인덱스에 중복값을 입력햇을 때 발생하는 예외.
-
-* INVALID\_CURSOR 
-
-    : 잘못된 커서 조작이 샐행될 때 발생되는 예외.
-
-* INVALID\_NUMBER 
-
-    : 문자를 숫자로의 변환 시 실패가 될 때 발생하는 예외.
-
-* LOGIN\_DENIED 
-
-    : 잘못된 사용자명이나 암호로 로그인시도시 발생하는 예외.
-
-* NO\_DATA\_FOUND 
-
-    : PL/SQL Select문이 한 건도 리턴하지 못하는 경우 발생하는 예외.
-
-* NOT\_LOGGED ON 
-
-    : 접속되지 않은 상태에서 데이터베이스에 대한 요청이 PL/SQL 프로그램으로
-
-  ```text
-  실행된 경우 발생되는 예외.
-  ```
-
-* PROGRAM\_ERROR 
-
-    : PL/SQL이 내부적인 문제를 가지고 있는 경우 발생되는 예외.
-
-* ROWTYPE\_MISMATCH 
-
-    : 할당문에서 호스트 커서 변수와 PL/SQL 커서 변수의 데이터 형이 불일치할 때 발생되는 예외
-
-* STORAGE\_ERROR 
-
-    : PL/SQL이 실행될 때 메모리가 부족하거나 메모리상에 문제가 일어났을 대 발생하는 예외.
-
-* SUBSCRIPT\_BEYOND\_COUNT 
-
-    : 컬렉션의 요소 갯수보다 더 큰 첨자 값으로 참조한 경우 발생
-
-* SUBSCRIPT\_OUTSIDE\_LIMIT 
-
-    : 컬렉션의 첨자 한계를 벗어난 참조가 일어났을 때 발생
-
-* SYS\_INVALID\_ROWD 
-
-    : 문자열을 ROWID로 변환할 때 무효한 문자열의 표현일 경우 발생되는 예외.
-
-* TIMEOUT\_ON\_RESOURCE 
-
-    : 자원에 대한 대기시간이 초과했을 때 발생하는 예외.
-
-* TOO\_MANY\_ROWS 
-
-    : PL/SQL select문이 두건이상의 행을 리턴햇을 때 발생되는 예외.
-
-* VALUE\_ERROR 
-
-    : 산술,변환,절삭 크기 제약에 에러가 생겼을 때 발생되는 예외.
-
-* ZERO\_DIVIDE : 0으로 나누려 했을 때 발생하는 예외.
-
-  ㄴ. Non-predefined ORACLE Exception : 사전에 정해지지 않은 예외 b. 사용자 정의 예외 : 사용자에 의해 정의되는 예외 사용자 정의 예외 사용 예\) declare \(선언부에서\) 예외명 exception; begin부나 exception부에서 raise문을 이용해서 예외를 발생시킨다.
-
-  * 예외처리부 형식\)
-
-    -- 예외처리부 : 예외 발생시 어떻게 처리할 것인지에 예외처리 내용이 들어간다.
-
-    Exception
-
-    when 예외명 then
-
-    실행문...
-
-    when 예외명2 then
-
-    실행문...
-
-    when OTHERS then
-
-    실행문...
 
 ### 저장프로시저
 
@@ -887,33 +860,96 @@ create procedure 프로시저명
 
 ### 함수
 
-create \(or replace\) function 함수명 파라미터1 파라미터타입, 파라미터2 파라미터타입,... return datatype is PL/SQL 블럭; --EX\) create or replace function dept\_max\_sal \(dept\_id employees.department\_id%type\) return number IS max\_sal employees.salary%type; begin select max\(salary\) into max\_sal from employees where department\_id = dept\_id;
+```text
+create (or replace) function 함수명
+    파라미터1 파라미터타입,
+    파라미터2 파라미터타입,...
+    return datatype
+    is
+    PL/SQL 블럭;
+--EX)
+create or replace function dept_max_sal
+  (dept_id employees.department_id%type)
+return number
+IS
+  max_sal employees.salary%type;
+begin
+  select max(salary) into max_sal
+  from employees
+  where department_id = dept_id;
+  
+  -- number 타입의 max_sal을 리턴시킴
+  return max_sal; 
+end;
+/
+  
+select dept_max_sal(50) from dual;
 
--- number 타입의 max\_sal을 리턴시킴 return max\_sal; end; /
 
-select dept\_max\_sal\(50\) from dual;
+create or replace function cnt_number
+  (cnt number)
+return number
+IS
+  total_cnt number;
+begin
+  select count(*) into total_cnt
+  from employees
+  where department_id = cnt;
+  
+  return total_cnt;
+end;
+/
 
-create or replace function cnt\_number \(cnt number\) return number IS total\_cnt number; begin select count\(\*\) into total\_cnt from employees where department\_id = cnt;
-
-return total\_cnt; end; /
-
-select distinct cnt\_number\(50\) from employees; -- 부서별 인원수 select distinct department\_id, cnt\_number\(department\_id\) from employees;
+select distinct cnt_number(50) from employees;
+-- 부서별 인원수
+select distinct department_id, cnt_number(department_id) from employees;
 
 declare
 
-begin dbms\_output.put\_line\(cnt\_number\(50\)\); end;
+begin
+   dbms_output.put_line(cnt_number(50));
+end;
 
-create or replace function avg\_sal \(dept\_id employees.department\_id%type\) return number IS avg\_salary number; begin select round\(avg\(salary\),2\) into avg\_salary from employees where department\_id = dept\_id;
 
-return avg\_salary; end; /
+create or replace function avg_sal
+  (dept_id employees.department_id%type)
+return number
+IS
+  avg_salary number;
+begin
+  select round(avg(salary),2) into avg_salary
+  from employees
+  where department_id = dept_id;
+  
+  return avg_salary;
+end;
+/
 
-select department\_id, avg\_sal\(department\_id\) 부서별평균급여 from employees group by department\_id;
+select department_id, avg_sal(department_id) 부서별평균급여
+from employees
+group by department_id;
 
-create or replace function emp\_dept\_name \(emp\_id employees.employee\_id%type\) return varchar2 IS dept\_name departments.department\_name%type; BEGIN select department\_name into dept\_name from departments where department\_id = \(select department\_id from employees where employee\_id = emp\_id\);
 
-return dept\_name; END; /
 
-select distinct employee\_id, emp\_dept\_name\(employee\_id\) from employees;
+create or replace function emp_dept_name
+  (emp_id employees.employee_id%type)
+return varchar2
+IS
+  dept_name departments.department_name%type;
+BEGIN
+  select department_name into dept_name
+  from departments
+  where department_id = (select department_id from employees 
+                         where employee_id = emp_id);
+  
+  return dept_name;
+END;
+/
+
+select distinct employee_id, emp_dept_name(employee_id) from employees;
+```
+
+
 
 ### 트리거
 
@@ -922,128 +958,300 @@ select distinct employee\_id, emp\_dept\_name\(employee\_id\) from employees;
 * \[ 트리거의 유형 \] // 여기선 dml트리거에 대해서만 알아봄
   * insert, update, delete의 결과로 실행되는 ""
 * \*\* 트리거는 commit, rollback을 수행할 수 없고, commit,rollback을 수행하는 함수도 사용할 수 없다.
-* \[ 트리거 구문 형식 \] create \(or replace\) trigger 트리거이름 timming\[before \| after\] event \[insert \| update \| delete\] ON 테이블명
-
-  begin 실행명령; end;
-
-  트리거 내에서는 new와 old키워드를 통해서 DML작업이 일어난 테이블의 필드값을 가지고 올 수 있는데 :NEW.컬럼명: DML트리거의 수정 또는 삽입문 내에서 사용이 가능하다. -&gt; SQL 반영 후의 컬럼 데이터 :OLD.컬럼명 : DML트리거의 수정 또는 삭제문 내에서 사용이 가능하다. -&gt; SQL 반영전의 컬럼 데이터 를 의미하게 됩니다.
-
-\*/ -- EX\) -- 테스트용 테이블 하나 생성 create table sample\_dept\( dept\_id number, dept\_name varchar2\(15\), loc varchar2\(10\) \); desc sample\_dept;
-
--- 위의 sample\_dept에 데이터가 insert될 때 자동으로 동작하는 트리거를 작성해보자. create or replace trigger print\_msg -- sample\_dept테이블에 insert작업 이후에 실행되도록 after insert ON sample\_dept BEGIN DBMS\_OUTPUT.PUT\_line\('부서가 추가되었습니다.'\); END; / -- 화면 출력 가능하게 세팅 set serveroutput on; -- 테이블에 insert작업 발생시킴 insert into sample\_dept values\(10,'마케팅부','서울'\);
-
-### -- 자동으로 print\_msg 트리거가 동작하게됨
-
--- 물건 관리를 위한 테이블 create table item\( code char\(6\) primary key, -- 물품 코드 name varchar2\(15\) not null, company varchar2\(15\), price number\(8\), cnt number default 0 -- 재고 수량 \);
-
-create table warehouse\( num number\(6\) primary key, --물품 입고 번호 code char\(6\), indate date default sysdate, -- 입고 날짜 incnt number\(6\), inprice number\(6\), totalprice number\(8\), constraint fk\_code foreign key\(code\) references item\(code\) \);
-
-insert into item\(code,name,company,price\) values\('c0001','선풍기','삼성',100000\); insert into item\(code,name,company,price\) values\('c0002','에어컨','LG',50000\); select \* from item;
-
--- 창고\(warehouse\)에 상품이 입고될 때마다 상품\(item\)의 수량이 늘어나도록!\( -- 재고수량이 자동으로 늘어나도록 !! 트리거로 작성해 보자.
-
--- 재고수량 갱신을 위한 트리거 생성 create or replace trigger cnt\_add after insert on warehouse for each row -- 각 row마다 반복한다는 의미 begin update item set cnt = cnt + :new.incnt -- new 선언은 insert문,update문에서만 사용가능 -- new키워드를 통해 warehouse 테이블 데이터에접근할 수 있고, warehouse 테이블에 insert작업이 이루어진 후의 -- 데이터를 가지고 온다는 의미이다.\(new\) where code = :new.code; end; /
-
-insert into warehouse\(num, code, incnt, inprice, totalprice\) values\(1,'c0001',2,100000,200000\); select  _from item; select_  from warehouse;
-
--- 창고에서 물품이 삭제될 때마다 수량을 줄이는 트리거 create or replace trigger cnt\_sub after delete on warehouse for each row begin -- delete에서는 new가 아닌 old를 사용해야 함 -- delete작업이 반영되고 나버리면 데이터가 없기 때문에 반영할 incnt값이 없으니까 update item set cnt = cnt - :old.incnt where code = :old.code; end; /
-
-delete from warehouse where code = 'c0001';
-
-### select \* from item;
-
--- **update** -- 수식 주의 create or replace trigger cnt\_update after update on warehouse for each row begin -- +- 는 +와 - 작업을 둘 다 해준다는 의미 -- update item set cnt = cnt +- :old.incnt + :new.incnt -- 기존의 incnt값을 빼주고, 새로운 incnt값을 더해준다는 의미 -- ex\) 기존에 incnt값이 5가 있었으면 기존에 있었던 5를 빼주고 새로 입력된 7로 갱신해주기 위해 7을 더한다는 의미 5-5+7 -- 기존의 값을 없애고 새 값을 반영해주도록 update를 짜야한다. -- where code = :new.code;
+* \[ 트리거 구문 형식 \] 
 
 ```text
- -- update item set cnt = cnt - :old.incnt + :new.incnt where code = :new.code;
-  update item set cnt = :new.incnt where code = :new.code;
+create (or replace) trigger 트리거이름 
+  timming[before | after] event [insert | update | delete] ON 테이블명
+begin
+  실행명령;
 end;
 ```
 
+트리거 내에서는 new와 old키워드를 통해서 DML작업이 일어난 테이블의 필드값을 가지고 올 수 있는데 :NEW.컬럼명: DML트리거의 수정 또는 삽입문 내에서 사용이 가능하다. -&gt; SQL 반영 후의 컬럼 데이터   
+:OLD.컬럼명 : DML트리거의 수정 또는 삭제문 내에서 사용이 가능하다. -&gt; SQL 반영전의 컬럼 데이터 를 의미하게 됩니다.
+
+```sql
+EX)
+-- 테스트용 테이블 하나 생성
+create table sample_dept(
+  dept_id number,
+  dept_name varchar2(15),
+  loc varchar2(10)
+);
+desc sample_dept;
+
+-- 위의 sample_dept에 데이터가 insert될 때 자동으로 동작하는 트리거를 작성해보자.
+create or replace trigger print_msg
+-- sample_dept테이블에 insert작업 이후에 실행되도록
+after insert ON sample_dept 
+BEGIN
+  DBMS_OUTPUT.PUT_line('부서가 추가되었습니다.');
+END;
+/
+-- 화면 출력 가능하게 세팅
+set serveroutput on;
+-- 테이블에 insert작업 발생시킴
+insert into sample_dept values(10,'마케팅부','서울');
+-- 자동으로 print_msg 트리거가 동작하게됨
+--------------------------------------------------------------------------------
+
+-- 물건 관리를 위한 테이블
+create table item(
+  code char(6) primary key, -- 물품 코드
+  name varchar2(15) not null,
+  company varchar2(15),
+  price number(8),
+  cnt number default 0 -- 재고 수량
+);
+
+create table warehouse(
+  num number(6) primary key, --물품 입고 번호
+  code char(6),
+  indate date default sysdate, -- 입고 날짜
+  incnt number(6),
+  inprice number(6),
+  totalprice number(8),
+  constraint fk_code foreign key(code) references item(code)
+);
+
+insert into item(code,name,company,price) values('c0001','선풍기','삼성',100000);
+insert into item(code,name,company,price) values('c0002','에어컨','LG',50000);
+select * from item;
+
+-- 창고(warehouse)에 상품이 입고될 때마다 상품(item)의 수량이 늘어나도록!(
+    --  재고수량이 자동으로 늘어나도록 !! 트리거로 작성해 보자.
+
+-- 재고수량 갱신을 위한 트리거 생성
+create or replace trigger cnt_add
+after insert on warehouse
+for each row -- 각 row마다 반복한다는 의미
+  begin
+    update item set cnt = cnt + :new.incnt -- new 선언은 insert문,update문에서만 사용가능
+    -- new키워드를 통해 warehouse 테이블 데이터에접근할 수 있고, warehouse 테이블에 insert작업이 이루어진 후의
+    -- 데이터를 가지고 온다는 의미이다.(new)
+    where code = :new.code; 
+  end;
 /
 
-update warehouse set incnt = 11, inprice = 800000 where code = 'c0001'; select  _from warehouse; select_  from item;
+insert into warehouse(num, code, incnt, inprice, totalprice)
+values(1,'c0001',2,100000,200000);
+select * from item;
+select * from warehouse;
 
--- 조건을 이용한 EX\) Create Trigger testTrigger after insert or update or delete -- 삽입, 업데이트, 삭제 중 하나 발생 이후에 실행 on emp -- emp 테이블에 적용 for each row -- DML작업에 의해 변경된 각각의 튜플\(행\)에 대해서 when \(:new.sal &gt; :old.sal\) -- 새로 변경된 sal이 변경전의 sal보다 큰 튜플에 대해서만 -- 아래의 작업을 진행하라. BEGIN if \(inserting\) then dbms\_output.put\_line\('inserting'\); -- 삽입이면 elsif \(updating\) then dbms\_output.put\_line\('updating'\); -- 수정이면 elsif \(deleting\) then dbms\_output.put\_line\('deleting'\); -- 삭제이면 end if; END;
+-- 창고에서 물품이 삭제될 때마다 수량을 줄이는 트리거
+create or replace trigger cnt_sub
+after delete on warehouse
+for each row
+  begin
+    -- delete에서는 new가 아닌 old를 사용해야 함
+    -- delete작업이 반영되고 나버리면 데이터가 없기 때문에 반영할 incnt값이 없으니까
+    update item set cnt = cnt - :old.incnt
+    where code = :old.code;
+  end;
+/
 
-```text
--- 따라서, DML에 의해 변경된 모든 튜플들 중에 when의 조건에 해당하는 튜플(행)들에
--- ~작업을 하도록 되는 것
+delete from warehouse where code = 'c0001';
+select * from item;
+--------------------------------------------------------------------------------
+
+-- **update**
+  -- 수식 주의
+create or replace trigger cnt_update
+after update on warehouse
+  for each row
+    begin
+      -- +- 는 +와 - 작업을 둘 다 해준다는 의미
+      --  update item set cnt = cnt +- :old.incnt + :new.incnt -- 기존의 incnt값을 빼주고, 새로운 incnt값을 더해준다는 의미
+      -- ex) 기존에 incnt값이 5가 있었으면 기존에 있었던 5를 빼주고 새로 입력된 7로 갱신해주기 위해 7을 더한다는 의미 5-5+7
+      -- 기존의 값을 없애고 새 값을 반영해주도록 update를 짜야한다.
+    --  where code = :new.code;
+      
+     -- update item set cnt = cnt - :old.incnt + :new.incnt where code = :new.code;
+      update item set cnt = :new.incnt where code = :new.code;
+    end;
+/
+
+update warehouse set incnt = 11, inprice = 800000 where code = 'c0001';
+select * from warehouse;
+select * from item;
+
+
+-- 조건을 이용한 EX)
+Create Trigger testTrigger
+    after insert or update or delete -- 삽입, 업데이트, 삭제 중 하나 발생 이후에 실행
+    on emp -- emp 테이블에 적용
+    for each row -- DML작업에 의해 변경된 각각의 튜플(행)에 대해서
+    when (:new.sal > :old.sal) -- 새로 변경된 sal이 변경전의 sal보다 큰 튜플에 대해서만
+    -- 아래의 작업을 진행하라.
+    BEGIN
+        if (inserting) then dbms_output.put_line('inserting'); -- 삽입이면 
+        elsif (updating) then dbms_output.put_line('updating'); -- 수정이면
+        elsif (deleting) then dbms_output.put_line('deleting'); -- 삭제이면
+        end if;
+    END;
+    
+    -- 따라서, DML에 의해 변경된 모든 튜플들 중에 when의 조건에 해당하는 튜플(행)들에
+    -- ~작업을 하도록 되는 것
 ```
+
+
+
+
 
 ### 테이블스페이스
 
-/\* \[ 테이블 스페이스 \] : 오라클에서 데이터를 저장할 때 사용하는 논리적 저장공간\(하드디스크에서는 실제 여러개의 물리적인 데이터 파일로 구성될 수 있음\) -&gt; 오라클 시스템 운영에 필요한 필수 정보를 담고 있음
+```sql
+/*
+  [ 테이블 스페이스 ]
+  : 오라클에서 데이터를 저장할 때 사용하는 논리적 저장공간(하드디스크에서는 실제 여러개의 물리적인
+    데이터 파일로 구성될 수 있음)
+    -> 오라클 시스템 운영에 필요한 필수 정보를 담고 있음
+    
+    DB는
+      여러개의 테이블 스페이스로 구성되고, 각 테이블 스페이스는 여러개의 세그먼트로 구성된다.
+      이때, 세그먼트는 각종 table, trigger, index, package 등 다양한 DB Object들이 될 수 있다.
+      
+    - 시스템 테이블 스페이스
+      : DB설치시 자동으로 기본적으로 가지고 있는 테이블 스페이스로, 
+        별도로 테이블 스페이스를 지정하지 않고 테이블, 트리거, 프로시저 등을 생성했다면
+        이 시스템 테이블 스페이스에 저장되었던 것!
+        EX) Data Dictionary 정보, 프로시저, 트리거, 패키지, 시스템 rollback segment, 사용자 데이터 포함
+      
+        rollback segment란?
+          : rollback시 commit하기 전 상태로 돌리는데 그 돌리기 위한 상태를 저장하고 있는 세그먼트
+      
+    - Non-System 테이블 스페이스
+      : EX) Temporary 세그먼트, application Data 세그먼트, index 세그먼트, 사용자 데이터 세그먼트
+       Temporary세그먼트란?
+        : order by를 해서 데이터를 가져오기 위해선 임시로 정렬할 데이터를 가지고 있을 공간이 필요하고
+          그 곳에서 정렬한 뒤 데이터를 가져오는데 이 공간을 가리킨다.
+        
+    
+    - [ 테이블스페이스의 구성 ]
+    - 테이블 스페이스
+      - 세그먼트(segment) : table, 트리거 등
+          - 익스텐트(extent) : 연속적인 데이터블록으로 구성(오라클 입출력 최소 저장 단위)
+          
+    - [ 테이블 스페이스 생성 구문 ]
+    create tablespace 테이블스페이스명
+      datafile '저장될 경로 및 사용할 파일명' // DBF, ora 파일로 저장
+      size 저장공간 // 기본 크기 지정
+      default storage storage_clause;
+    
+    테이블스페이스 삭제
+      drop tablespace 테이블스페이스이름
+      [including contents[and datafiles] //테이블 스페이스에 들어있는 데이터도 지울지
+      [cascade constraints] // 연계성 있는 테이블스페이스도 삭제할지
 
-```text
-DB는
-  여러개의 테이블 스페이스로 구성되고, 각 테이블 스페이스는 여러개의 세그먼트로 구성된다.
-  이때, 세그먼트는 각종 table, trigger, index, package 등 다양한 DB Object들이 될 수 있다.
+    이렇게 쿼리문으로 만들수도 잇지만 EM이라는 관리도구를 통해 쉽게 UI적으로 할 수 있다.
+    
+    - 테이블스페이스 생성은 system 계정이어야 한다.
+*/
+create tablespace test_1
+  datafile 'c:\oradata\test_1.dbf'
+  size 100M
+  default storage (
+                    initial 6M --최초 익스텐트 크기
+                    next 1M -- 첫번째 익스텐트 다 사용 후 그 다음 익스텐트 크기
+                    MINEXTENTS 1 -- 최소 개수
+                    MAXEXTENTS 10
+                    PCTINCREASE 0 -- next 익스텐트 다음에 ()프로 저장공간을 할당한다.
+                  );
+-- 저장공간을 10M 늘리도록 수정해 보자.                  
+alter tablespace test_1
+  add datafile 'c:\oradata\test_2.dbf' size 10M;
 
-- 시스템 테이블 스페이스
-  : DB설치시 자동으로 기본적으로 가지고 있는 테이블 스페이스로, 
-    별도로 테이블 스페이스를 지정하지 않고 테이블, 트리거, 프로시저 등을 생성했다면
-    이 시스템 테이블 스페이스에 저장되었던 것!
-    EX) Data Dictionary 정보, 프로시저, 트리거, 패키지, 시스템 rollback segment, 사용자 데이터 포함
+create table aaa(
+  name varchar2(10)
+); -- 그냥 이렇게 하면 시스템 테이블 스페이스에 저장되게 됨
 
-    rollback segment란?
-      : rollback시 commit하기 전 상태로 돌리는데 그 돌리기 위한 상태를 저장하고 있는 세그먼트
+-- test_1 테이블 스페이스에 저장하도록 테이블 aaa2를 생성
+create table aaa2(
+  name varchar2(10)
+)tablespace test_1;
 
-- Non-System 테이블 스페이스
-  : EX) Temporary 세그먼트, application Data 세그먼트, index 세그먼트, 사용자 데이터 세그먼트
-   Temporary세그먼트란?
-    : order by를 해서 데이터를 가져오기 위해선 임시로 정렬할 데이터를 가지고 있을 공간이 필요하고
-      그 곳에서 정렬한 뒤 데이터를 가져오는데 이 공간을 가리킨다.
+-- 테이블 스페이스를 지움
+drop tablespace test_1; -- 오류 발생 내용이 잇기 때문 따라서 including contents 옵션 사용이 필요
+
+drop tablespace test_1
+  including contents; -- 테이블 스페이스 내부에 있는 데이터도 같이 삭제한다는 의미임
+-- 하고나도 파일은 남아 있음
+-- 따라서, 파일까지 지울려면 and datafiles 옵션도 추가해주어야 함
 
 
-- [ 테이블스페이스의 구성 ]
-- 테이블 스페이스
-  - 세그먼트(segment) : table, 트리거 등
-      - 익스텐트(extent) : 연속적인 데이터블록으로 구성(오라클 입출력 최소 저장 단위)
+create tablespace test_3
+  datafile 'c:\oradata\test_3.dbf'
+  size 100M
+  default storage (
+                    initial 6M --최초 익스텐트 크기
+                    next 1M -- 첫번째 익스텐트 다 사용 후 그 다음 익스텐트 크기
+                    MINEXTENTS 1 -- 최소 개수
+                    MAXEXTENTS 10
+                    PCTINCREASE 0 -- next 익스텐트 다음에 ()프로 저장공간을 할당한다.
+                  );
+drop tablespace test_3
+  including contents and datafiles;
 
-- [ 테이블 스페이스 생성 구문 ]
-create tablespace 테이블스페이스명
-  datafile '저장될 경로 및 사용할 파일명' // DBF, ora 파일로 저장
-  size 저장공간 // 기본 크기 지정
-  default storage storage_clause;
+/*
+  [ 테이블스페이스 관리 ]
+  : 처음 생성한 테이블스페이스 크기를 넘어가면 테이블스페이스 저장 용량을 늘려줘야할 것이다.
+  이때, 수동으로 하지 않고 저장공간을 자동으로 늘리는 방법에 대해 알아보자.
+  
+  - 테이블스페이스의 size를 자동으로 조정하는 옵션 ]
+  
+*/
+create tablespace test_3
+  datafile 'c:\oradata\test_3.dbf'
+  size 10M
+  default storage (
+                    initial 6M --최초 익스텐트 크기
+                    next 1M -- 첫번째 익스텐트 다 사용 후 그 다음 익스텐트 크기
+                    MINEXTENTS 1 -- 최소 개수
+                    MAXEXTENTS 10
+                    PCTINCREASE 0 -- next 익스텐트 다음에 ()프로 저장공간을 할당한다.
+                  );
+                  
+-- 테이블 size를 자동으로 조정하는 방식
+alter tablespace test_3
+  add datafile 'c:\oradata\test_4.dbf' size 10M
+  AUTOEXTEND ON NEXT 10M MAXSIZE 200M; -- 10M초과시 자동으로 10M시 늘리되 최대 200M까지
 
-테이블스페이스 삭제
-  drop tablespace 테이블스페이스이름
-  [including contents[and datafiles] //테이블 스페이스에 들어있는 데이터도 지울지
-  [cascade constraints] // 연계성 있는 테이블스페이스도 삭제할지
 
-이렇게 쿼리문으로 만들수도 잇지만 EM이라는 관리도구를 통해 쉽게 UI적으로 할 수 있다.
+-- DBA가 수동으로 size를 조정하는 방법
+alter database datafile 
+  'c:\oradata\test_3.dbf' resize 30M; -- 기존 파일을 30M사이즈로 바꿈
 
-- 테이블스페이스 생성은 system 계정이어야 한다.
+
+-- [ 테이블스페이스 관련 Dictionary ]  
+/*
+    .DBA_TABLESPACES : 모든 테이블스페이스의 저장정보 및 상태정보를 갖고 있는 Dictionary
+    .DBA_DATA_FILES : 테이블스페이스의 파일정보
+    .DBA_FREE_SPACE : 테이블스페이스의 사용공간에 관한 정보
+    .DBA_FREE_SPACE_COALESCED : 테이블스페이스가 수용할 수 있는 익스텐트의 정보
+*/
+select tablespace_name, initial_extent, next_extent, min_extents, max_extents,
+       pct_increase, status, contents
+from DBA_TABLESPACES;
+select * from dba_tablespaces;
+select * from dba_data_files;
+select * from dba_free_space;
+select * from SYS.DBA_FREE_SPACE_COALESCED;
+
+-- extent 수집(coalesced) 명령
+--alter tablespace 테이블스페이스명 coalesce;
+
+
+
+
+
+
+
+
+
+
+
 ```
-
-\*/ create tablespace test\_1 datafile 'c:\oradata\test\_1.dbf' size 100M default storage \( initial 6M --최초 익스텐트 크기 next 1M -- 첫번째 익스텐트 다 사용 후 그 다음 익스텐트 크기 MINEXTENTS 1 -- 최소 개수 MAXEXTENTS 10 PCTINCREASE 0 -- next 익스텐트 다음에 \(\)프로 저장공간을 할당한다. \); -- 저장공간을 10M 늘리도록 수정해 보자.  
-alter tablespace test\_1 add datafile 'c:\oradata\test\_2.dbf' size 10M;
-
-create table aaa\( name varchar2\(10\) \); -- 그냥 이렇게 하면 시스템 테이블 스페이스에 저장되게 됨
-
--- test\_1 테이블 스페이스에 저장하도록 테이블 aaa2를 생성 create table aaa2\( name varchar2\(10\) \)tablespace test\_1;
-
--- 테이블 스페이스를 지움 drop tablespace test\_1; -- 오류 발생 내용이 잇기 때문 따라서 including contents 옵션 사용이 필요
-
-drop tablespace test\_1 including contents; -- 테이블 스페이스 내부에 있는 데이터도 같이 삭제한다는 의미임 -- 하고나도 파일은 남아 있음 -- 따라서, 파일까지 지울려면 and datafiles 옵션도 추가해주어야 함
-
-create tablespace test\_3 datafile 'c:\oradata\test\_3.dbf' size 100M default storage \( initial 6M --최초 익스텐트 크기 next 1M -- 첫번째 익스텐트 다 사용 후 그 다음 익스텐트 크기 MINEXTENTS 1 -- 최소 개수 MAXEXTENTS 10 PCTINCREASE 0 -- next 익스텐트 다음에 \(\)프로 저장공간을 할당한다. \); drop tablespace test\_3 including contents and datafiles;
-
-/\* \[ 테이블스페이스 관리 \] : 처음 생성한 테이블스페이스 크기를 넘어가면 테이블스페이스 저장 용량을 늘려줘야할 것이다. 이때, 수동으로 하지 않고 저장공간을 자동으로 늘리는 방법에 대해 알아보자.
-
-* 테이블스페이스의 size를 자동으로 조정하는 옵션 \]
-
-\*/ create tablespace test\_3 datafile 'c:\oradata\test\_3.dbf' size 10M default storage \( initial 6M --최초 익스텐트 크기 next 1M -- 첫번째 익스텐트 다 사용 후 그 다음 익스텐트 크기 MINEXTENTS 1 -- 최소 개수 MAXEXTENTS 10 PCTINCREASE 0 -- next 익스텐트 다음에 \(\)프로 저장공간을 할당한다. \);
-
--- 테이블 size를 자동으로 조정하는 방식 alter tablespace test\_3 add datafile 'c:\oradata\test\_4.dbf' size 10M AUTOEXTEND ON NEXT 10M MAXSIZE 200M; -- 10M초과시 자동으로 10M시 늘리되 최대 200M까지
-
--- DBA가 수동으로 size를 조정하는 방법 alter database datafile 'c:\oradata\test\_3.dbf' resize 30M; -- 기존 파일을 30M사이즈로 바꿈
-
--- \[ 테이블스페이스 관련 Dictionary \]  
-/ _.DBA\_TABLESPACES : 모든 테이블스페이스의 저장정보 및 상태정보를 갖고 있는 Dictionary .DBA\_DATA\_FILES : 테이블스페이스의 파일정보 .DBA\_FREE\_SPACE : 테이블스페이스의 사용공간에 관한 정보 .DBA\_FREE\_SPACE\_COALESCED : 테이블스페이스가 수용할 수 있는 익스텐트의 정보_ / select tablespace\_name, initial\_extent, next\_extent, min\_extents, max\_extents, pct\_increase, status, contents from DBA\_TABLESPACES; select  _from dba\_tablespaces; select_  from dba\_data\_files; select  _from dba\_free\_space; select_  from SYS.DBA\_FREE\_SPACE\_COALESCED;
-
--- extent 수집\(coalesced\) 명령 --alter tablespace 테이블스페이스명 coalesce;
 
 
 
