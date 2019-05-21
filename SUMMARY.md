@@ -13,5 +13,3 @@
 * [linux \(centos\)](linux-centos.md)
 * [linux \(ubuntu\)](linux-ubuntu.md)
 
-## FRAMEWORK
-

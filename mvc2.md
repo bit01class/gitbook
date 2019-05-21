@@ -1,31 +1,19 @@
 # MVC2
 
-
-
-### FrontController 패턴
+## FrontController 패턴
 
 [http://codedragon.tistory.com/4743](http://codedragon.tistory.com/4743?category=196761)
 
-###  
-
-### Command 패턴
+## Command 패턴
 
 \*\*\*\*[**http://codedragon.tistory.com/4744**](http://codedragon.tistory.com/4744)\*\*\*\*
 
-
-
-
-
-
-
-
-
-### Maven
+## Maven
 
 * [Getting Started in 5 Minutes](https://maven.apache.org/guides/getting-started/maven-in-five-minutes.html)
 * [Getting Started in 30 Minutes](https://maven.apache.org/guides/getting-started/index.html)
 
-### Jetty Plugin
+## Jetty Plugin
 
 ```text
     <plugins>
@@ -48,13 +36,7 @@
     </plugins>
 ```
 
-
-
-
-
-### Servlet Filter
-
-
+## Servlet Filter
 
 {% code-tabs %}
 {% code-tabs-item title="MyFilter.java" %}
@@ -75,7 +57,7 @@ import org.slf4j.LoggerFactory;
 public class MyFilter implements Filter { 
     private static final Logger logger = LoggerFactory.getLogger(MyFilter.class); 
     private String encoding; 
-    
+
     @Override 
     public void init(FilterConfig config) throws ServletException { 
      logger.info("init call");
@@ -83,7 +65,7 @@ public class MyFilter implements Filter {
     /* 필터 실행 부분 */ 
     @Override 
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-     
+
      logger.info("before doFilter"); 
      chain.doFilter(request, response);
      logger.info("after doFilter"); 
@@ -96,8 +78,6 @@ public class MyFilter implements Filter {
 ```
 {% endcode-tabs-item %}
 {% endcode-tabs %}
-
-
 
 {% code-tabs %}
 {% code-tabs-item title="web.xml" %}
@@ -124,24 +104,4 @@ public class MyFilter implements Filter {
 ```
 {% endcode-tabs-item %}
 {% endcode-tabs %}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

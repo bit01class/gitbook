@@ -1,11 +1,5 @@
 # HTML5
 
-
-
-
-
-
-
 list-group
 
 ```markup
@@ -18,4 +12,37 @@ list-group
   </li>
 </ul>
 ```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+### META
+
+```markup
+<meta http-equiv="Content-Type" content="text/html; charset=EUC-KR">
+<meta http-equiv="refresh" content="3;URL=http://localhost:8080/">
+```
+
+
+
+
+
+
 

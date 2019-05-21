@@ -1,7 +1,5 @@
 # SPRING
 
-
-
 * Spring Core
   * Spring 프레임워크의 근간이 되는요소. IoC\(또는 DI\) 기능을 지원하는 영역을 담당.
   * BeanFactory를 기반으로 Bean 클래스들을 제어할 수 있는 기능을 지원
@@ -20,13 +18,7 @@
 * Spring Web MVC
   * Spring 프레임워크에서 독립적으로 Web UI Layer에 Model-View-Controller를 지원하기 위한 기능
 
-
-
-
-
-### Interceptor
-
-### 
+## Interceptor
 
 {% code-tabs %}
 {% code-tabs-item title="com.bit.interceptor.MyInterceptor.java" %}
@@ -80,15 +72,7 @@ public class MyInterceptor extends HandlerInterceptorAdapter {
 {% endcode-tabs-item %}
 {% endcode-tabs %}
 
-
-
-
-
-
-
-
-
-### AOP
+## AOP
 
 {% code-tabs %}
 {% code-tabs-item title="POM.xml" %}
@@ -105,9 +89,7 @@ public class MyInterceptor extends HandlerInterceptorAdapter {
 {% endcode-tabs-item %}
 {% endcode-tabs %}
 
-
-
-#### **AOP 용어**
+### **AOP 용어**
 
 * target : 부가 기능을 부여할 대상
 * advice : target에 제공할 부가 기능을 담은 클래스, Indicate the action to take either before or after the method execution.
@@ -115,9 +97,7 @@ public class MyInterceptor extends HandlerInterceptorAdapter {
 * pointcut : advice가 적용될 target을 지정하는 것을 의미, Indicate which method should be intercept, by method name or regular expression pattern.
 * Advisor – Group ‘Advice’ and ‘Pointcut’ into a single unit, and pass it to a proxy factory object.
 
-
-
-### Common AspectJ annotations :
+## Common AspectJ annotations :
 
 1. **@Before** – Run before the method execution
 2. **@After** – Run after the method returned a result
@@ -125,33 +105,23 @@ public class MyInterceptor extends HandlerInterceptorAdapter {
 4. **@AfterThrowing** – Run after the method throws an exception
 5. **@Around** – Run around the method execution, combine all three advices above.
 
+## Transaction
 
-
-### Transaction 
-
-{% tabs %}
-{% tab title="방법" %}
 클래스, 메서드위에 **@Transactional** 이 추가되면, 이 클래스에 트랜잭션 기능이 적용된 프록시 객체가 생성된다.
 
 이 프록시 객체는 **@Transactional**이 포함된 메소드가 호출 될 경우, **PlatformTransactionManager**를 사용하여 트랜잭션을 시작하고, 정상 여부에 따라 Commit 또는 Rollback 한다.
-{% endtab %}
 
-{% tab title="속성" %}
 * **원자성\(Atomicity\)**  - 한 트랜잭션 내에서 실행한 작업들은 하나로 간주한다. 즉, 모두 성공 또는 모두 실패.
 * **일관성\(Consistency\)** - 트랜잭션은 일관성 있는 데이타베이스 상태를 유지한다. \(data integrity 만족 등.\)
 * **격리성\(Isolation\)** - 동시에 실행되는 트랜잭션들이 서로 영향을 미치지 않도록 격리해야한다.
 * **지속성\(Durability\)** - 트랜잭션을 성공적으로 마치면 결과가 항상 저장되어야 한다.
-{% endtab %}
 
-{% tab title="설정" %}
 ```markup
 <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
      <property name="dataSource" ref="dataSource" />
 </bean>
 <tx:annotation-driven transaction-manager="transactionManager" proxy-target-class="true" />
 ```
-
-
 
 ```java
 @EnableTransactionManagement
@@ -161,20 +131,9 @@ public class AppConfig {
     public PlatformTransactionManager transactionManager() throws URISyntaxException, GeneralSecurityException, ParseException, IOException {
         return new DataSourceTransactionManager(dataSource());
     }
-
 ```
-{% endtab %}
-{% endtabs %}
 
-
-
-
-
-
-
-### SECURITY
-
-
+## SECURITY
 
 **스프링에서 제공하는 기본 권한\(Authority\)**
 
@@ -188,42 +147,38 @@ public class AppConfig {
 | ROLE\_USER | 일반 사용자 |
 | ROLE\_ADMIN | 관리자 |
 
-\[[권한관리](http://www.egovframe.go.kr/wiki/doku.php?id=egovframework:%EA%B6%8C%ED%95%9C%EA%B4%80%EB%A6%AC)\]
+\[[권한관리](http://www.egovframe.go.kr/wiki/doku.php?id=egovframework:권한관리)\]
 
-
-
-#### 필터설정
+### 필터설정
 
 {% code-tabs %}
 {% code-tabs-item title="web.xml" %}
 ```markup
 <context-param>
-	<param-name>contextConfigLocation</param-name>
-	<param-value>
-	/WEB-INF/spring/root-context.xml
-	classpath:/applicationContext.xml
-	</param-value>
+    <param-name>contextConfigLocation</param-name>
+    <param-value>
+    /WEB-INF/spring/root-context.xml
+    classpath:/applicationContext.xml
+    </param-value>
 </context-param>
 
 ...
 
 <filter>
-	<filter-name>springSecurityFilterChain</filter-name>
-	<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
-	<init-param>
-		<param-name>targetBeanName</param-name>
-		<param-value>springSecurityFilterChain</param-value>
-	</init-param>
+    <filter-name>springSecurityFilterChain</filter-name>
+    <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+    <init-param>
+        <param-name>targetBeanName</param-name>
+        <param-value>springSecurityFilterChain</param-value>
+    </init-param>
 </filter>
 <filter-mapping>
-	<filter-name>springSecurityFilterChain</filter-name>
-	<url-pattern>/*</url-pattern>
+    <filter-name>springSecurityFilterChain</filter-name>
+    <url-pattern>/*</url-pattern>
 </filter-mapping>
 ```
 {% endcode-tabs-item %}
 {% endcode-tabs %}
-
-
 
 {% code-tabs %}
 {% code-tabs-item title="root-context.xml" %}
@@ -232,31 +187,29 @@ public class AppConfig {
 <bean id="accessDeniedHandler" class="com.bit.secure01.MyAccessDeniedHandler"></bean>
 
 <security:http auto-config="true">
-	<security:intercept-url pattern="/" access="IS_AUTHENTICATED_ANONYMOUSLY"/>
-	<security:intercept-url pattern="/login" access="IS_AUTHENTICATED_ANONYMOUSLY"/>
-	<security:intercept-url pattern="/user" access="ROLE_USER"/>
-	<security:intercept-url pattern="/admin" access="ROLE_ADMIN"/>
-	<!-- 권한없음 -->
-	<security:access-denied-handler  ref="accessDeniedHandler"/>
-	<!-- 사용자정의 로그인 페이지 -->
-	<security:form-login login-page="/login"/>
-	<!-- 사용자정의 로그아웃 주소, 세션 갱신 여부 -->
-	<security:logout logout-url="/logout" invalidate-session="false"/>
+    <security:intercept-url pattern="/" access="IS_AUTHENTICATED_ANONYMOUSLY"/>
+    <security:intercept-url pattern="/login" access="IS_AUTHENTICATED_ANONYMOUSLY"/>
+    <security:intercept-url pattern="/user" access="ROLE_USER"/>
+    <security:intercept-url pattern="/admin" access="ROLE_ADMIN"/>
+    <!-- 권한없음 -->
+    <security:access-denied-handler  ref="accessDeniedHandler"/>
+    <!-- 사용자정의 로그인 페이지 -->
+    <security:form-login login-page="/login"/>
+    <!-- 사용자정의 로그아웃 주소, 세션 갱신 여부 -->
+    <security:logout logout-url="/logout" invalidate-session="false"/>
 </security:http>
 
 <security:authentication-manager>
-	<security:authentication-provider>
-		<security:user-service>
-			<security:user name="test01" password="1234" authorities="ROLE_USER"/>
-			<security:user name="admin" password="1234" authorities="ROLE_ADMIN,ROLE_USER"/>
-		</security:user-service>
-	</security:authentication-provider>
+    <security:authentication-provider>
+        <security:user-service>
+            <security:user name="test01" password="1234" authorities="ROLE_USER"/>
+            <security:user name="admin" password="1234" authorities="ROLE_ADMIN,ROLE_USER"/>
+        </security:user-service>
+    </security:authentication-provider>
 </security:authentication-manager>
 ```
 {% endcode-tabs-item %}
 {% endcode-tabs %}
-
-
 
 Default path
 
@@ -284,20 +237,14 @@ Default path
 {% endcode-tabs-item %}
 {% endcode-tabs %}
 
-
-
-
-
-### @PathVariable의 확장자포함
+## @PathVariable의 확장자포함
 
 ```java
 // /down/img.jpg
 @RequestMapping("/down/{filename:.+}")
 ```
 
-
-
-### ViewResolver - extends AbstractView
+## ViewResolver - extends AbstractView
 
 {% code-tabs %}
 {% code-tabs-item title="DownView.java" %}
@@ -305,18 +252,18 @@ Default path
 @Component("downView")
 public class DownView extends AbstractView{
 
-	@Override
-	protected void renderMergedOutputModel(Map<String, Object> model
-			, HttpServletRequest req, HttpServletResponse res)
-			throws Exception {
-		String fileName=(String) model.get("fileName");
-	
-		RandomAccessFile randomFile = new RandomAccessFile(new File("C:\\upload", fileName), "r");
-		long movieSize = randomFile.length(); 
-		res.setContentType("image/*");
-//		res.setContentType("video/*");
-//		res.setContentType("video/mp4");
-		res.setHeader("Content-Range", "bytes "+movieSize);
+    @Override
+    protected void renderMergedOutputModel(Map<String, Object> model
+            , HttpServletRequest req, HttpServletResponse res)
+            throws Exception {
+        String fileName=(String) model.get("fileName");
+
+        RandomAccessFile randomFile = new RandomAccessFile(new File("C:\\upload", fileName), "r");
+        long movieSize = randomFile.length(); 
+        res.setContentType("image/*");
+//        res.setContentType("video/*");
+//        res.setContentType("video/mp4");
+        res.setHeader("Content-Range", "bytes "+movieSize);
         res.setHeader("Accept-Ranges", "bytes");
         OutputStream out = res.getOutputStream();
         randomFile.seek(0);
@@ -324,14 +271,14 @@ public class DownView extends AbstractView{
         byte[] buf = new byte[bufferSize];
         int s=0;
         try{
-	        while((s=randomFile.read(buf)) > 0){
-	            out.write(buf, 0, s);
-			}
+            while((s=randomFile.read(buf)) > 0){
+                out.write(buf, 0, s);
+            }
         }finally {
-			out.close();
-		}
-        
-	}
+            out.close();
+        }
+
+    }
 
 }
 ```
@@ -343,24 +290,14 @@ public class DownView extends AbstractView{
 ```java
     @Resource(name="downView")
     private View downView;
-    
+
 public ModelAndView down(String filename){    
     ModelAndView mav=new ModelAndView();
-		mav.setView(downView);
-		mav.addObject("fileName", filename);
-		return mav;
+        mav.setView(downView);
+        mav.addObject("fileName", filename);
+        return mav;
 }
 ```
 {% endcode-tabs-item %}
 {% endcode-tabs %}
-
-
-
-
-
-
-
-
-
-
 

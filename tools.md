@@ -1,20 +1,10 @@
 # tools
 
-
-
-
-
-
-
-
-
-#### advanced REST client
+### advanced REST client
 
 [advanced REST client](https://chrome.google.com/webstore/detail/advanced-rest-client/hgmloofddffdnphfgcellkdfbfbjeloo)
 
-
-
-### Nexus
+## Nexus
 
 [Download](https://www.sonatype.com/download-oss-sonatype)
 
@@ -42,12 +32,6 @@ login
 ```text
 admin / admin123
 ```
-
-
-
-
-
-
 
 [https://confluence.curvc.com/pages/viewpage.action?pageId=20251565](https://confluence.curvc.com/pages/viewpage.action?pageId=20251565)
 
