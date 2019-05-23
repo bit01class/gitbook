@@ -35,3 +35,59 @@ admin / admin123
 
 [https://confluence.curvc.com/pages/viewpage.action?pageId=20251565](https://confluence.curvc.com/pages/viewpage.action?pageId=20251565)
 
+
+
+### Maven
+
+
+
+
+
+#### maven properties
+
+```markup
+<properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <maven.compiler.source>1.7</maven.compiler.source>
+    <maven.compiler.target>1.7</maven.compiler.target>
+</properties>
+```
+
+
+
+#### maven test pass 
+
+```markup
+<plugin>
+  <groupId>org.apache.maven.plugins</groupId>
+  <artifactId>maven-war-plugin</artifactId>
+    <configuration>
+      <failOnMissingWebXml>false</failOnMissingWebXml>
+    </configuration>
+</plugin>
+
+```
+
+```bash
+mvn -Dmaven.test.skip=true pakage
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
