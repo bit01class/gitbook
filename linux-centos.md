@@ -1,6 +1,8 @@
 # linux \(centos\)
 
-## GUI
+
+
+### GUI
 
 * yum group list
 * yum group install "GNOME Desktop" 
@@ -16,7 +18,7 @@
 * systemctl set-default graphical.target  \(systemctl set-default\)
 * reboot
 
-## add sudo
+### add sudo
 
 * groupadd sudo --system
 * visudo  
@@ -25,23 +27,52 @@
   * usermod -aG sudo &lt;id&gt;
   * adduser &lt;id&gt; sudo
 
-Java
 
-```text
+
+### Java
+
+```bash
 wget jdk-8u131-linux-x64.rpm
 rpm -ivh jdk-8u131-linux-x64.rpm
 alternatives --config java
 ```
 
-Tomcat
+
+
+### Apache
 
 ```text
+$ yum list | grep httpd
+
+$ sudo yum install httpd
+$ sudo yum install perl perl-CGI
+
+$ sudo systemctl start httpd.service
+$ sudo systemctl enable httpd.service
+
+
+```
+
+### Perl
+
+{% hint style="info" %}
+ [Tutorials](https://httpd.apache.org/docs/2.4/ko/howto/)
+
+[\(13\)Permission denied: access to /cgi-bin/test.cgi denied](https://stackoverflow.com/questions/1599728/13permission-denied-access-to-cgi-bin-test-cgi-denied)
+{% endhint %}
+
+
+
+
+
+### Tomcat
+
+```bash
 >yum list installed
 >yum list | grep tomcat
 >yum install -y tomcat*
-```
 
-```text
+
 >cd /usr/share/tomcat
 >ls -al
 drwxrwxr-x.   3 root tomcat   91  1월  1 00:00 .
@@ -55,6 +86,8 @@ lrwxrwxrwx.   1 root tomcat   23  1월  1 00:00 webapps -> /var/lib/tomcat/webap
 lrwxrwxrwx.   1 root tomcat   22  1월  1 00:00 work -> /var/cache/tomcat/work
 ```
 
+
+
 ```text
 $ firewall-cmd --permanent --add-port=8080/tcp 
 $ firewall-cmd --reload
@@ -64,7 +97,21 @@ $ systemctl enable tomcat
 $ systemctl start tomcat
 ```
 
-## VirtualBox additions
+
+
+
+
+
+
+
+
+
+
+
+
+### VirtualBox additions
+
+
 
 1. Install kernel include headers \(required by VBoxLinuxAdditions\).
    * RHEL: `sudo apt-get update && sudo apt-get install kernel-devel`

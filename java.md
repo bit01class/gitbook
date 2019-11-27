@@ -1,6 +1,6 @@
 # JAVA
 
-## Open JDK
+### Open JDK
 
 * download - [link](https://developers.redhat.com/products/openjdk/download/)
 * Ubuntu - sudo apt-get install openjdk-8-jdk
@@ -49,19 +49,22 @@ java-1.8.0-openjdk-devel.x86_64             1:1.8.0.101-3.b13.el6_8             
 # rpm -qa java*jdk-devel
 ```
 
-## ORALCE JDK install
+
+
+### ORALCE JDK install
 
 1. apt-get install software-properties-common
 2. add-apt-repository ppa:webupd8team/java
 3. apt-get update
 4. apt-get install oracle-java8-installer
 
-{% embed url="https://zetawiki.com/wiki/%EC%9A%B0%EB%B6%84%ED%88%AC\_Java\_8\_%EC%84%A4%EC%B9%98" caption="" %}
+{% embed url="https://zetawiki.com/wiki/%EC%9A%B0%EB%B6%84%ED%88%AC\_Java\_8\_%EC%84%A4%EC%B9%98" %}
 
-## setting check
 
-{% code-tabs %}
-{% code-tabs-item title=".bashrc" %}
+
+### setting check
+
+{% code title=".bashrc" %}
 ```bash
 javac -version
 
@@ -77,13 +80,13 @@ echo $PATH
 
 which javac
 ```
-{% endcode-tabs-item %}
-{% endcode-tabs %}
+{% endcode %}
 
-### other JDK
 
-{% code-tabs %}
-{% code-tabs-item title="Open jdk" %}
+
+#### other JDK
+
+{% code title="Open jdk" %}
 ```bash
 ## config java and enter the number for which JDK to use of your choice.
 $ sudo update-alternatives
@@ -99,15 +102,16 @@ java-1.8.0-openjdk-amd64 1069 /usr/lib/jvm/java-1.8.0-openjdk-amd64
 # update-alternatives --config java 
 # There is only one alternative in link group java (providing /usr/bin/java): /usr/lib/jvm/java-8-openjdk-amd64/jre/bin/java
 # 설정할 것이 없습니다.
-
+ 
 # update-alternatives --config javac
 # There is only one alternative in link group javac (providing /usr/bin/javac): /usr/lib/jvm/java-8-openjdk-amd64/bin/javac
 # 설정할 것이 없습니다.
 ```
-{% endcode-tabs-item %}
-{% endcode-tabs %}
+{% endcode %}
 
-## Compile
+
+
+### Compile
 
 ```bash
 notepad src\com\bit\project\ClassName.java
@@ -117,7 +121,9 @@ cd ..\dest
 java com.bit.project.ClassName
 ```
 
-## Batch
+
+
+### Batch
 
 ```bash
 @ECHO OFF
@@ -127,9 +133,21 @@ rem 프로그램 종료후 멈추기
 PAUSE
 ```
 
-## Reflection
 
-### **java.lang.Class**
+
+
+
+
+
+
+
+
+
+
+
+### Reflection
+
+#### **java.lang.Class**
 
 * String getName\(\) : 패키지 + 클래스 이름을 반환한다.
 * int getModifiers\(\) : 클래스의 접근 제어자를 숫자로 반환한다.
@@ -140,76 +158,20 @@ PAUSE
 * Method\[\] getMethods\(\) : 부모 클래스, 자신 클래스의 접근 가능한 public 메서드 목록을 반환한다.
 * Method\[\] getDeclaredMethods\(\) : 모든 메서드 목록을 반환한다.
 
-### **java.lang.refelct.Constructor**
+#### **java.lang.refelct.Constructor**
 
 * String getName\(\) : 생성자 이름을 반환한다.
 * int getModifiers\(\) : 생성자의 접근 제어자를 숫자로 반환한다.
 * Class\[\] getParameterTypes\(\) : 생성자 패러미터의 데이터 타입을 반환한다.
 
-### java.lang.refelct.Field
+#### java.lang.refelct.Field
 
 * String getName\(\) : 필드 이름을 반환한다.
 * int getModifiers\(\) : 필드의 접근 제어자를 숫자로 반환한다.
 
-### **java.lang.refelct.Method**
+#### **java.lang.refelct.Method**
 
 * String getName\(\) : 메서드 이름을 반환한다.
 * int getModifiers\(\) : 메서드의 접근 제어자를 숫자로 반환한다.
 * Class\[\] getParameterTypes\(\) : 메서드 패러미터의 데이터 타입을 반환한다.
-
-
-
-### XML 파싱
-
-```java
-        //1.문서를 읽기위한 공장
-        DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-        
-        //2.빌더 생성
-        DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-        
-        //3.생성된 빌더를 통해서 xml문서를 Document객체로 파싱해서 가져온다
-		Document doc = dBuilder.parse(xmlFile);
-		doc.getDocumentElement().normalize();//문서 구조 안정화
-		
-		Element root = doc.getDocumentElement(); 
-		
-		NodeList n_list = root.getElementsByTagName("person");
-		Element el = null;
-		NodeList sub_n_list = null; //sub_n_list
-        Element sub_el = null; //sub_el
-        
-        Node v_txt = null;
-        String value="";
-        
-        String[] tagList = {"name", "age", "job"};
-		 
-		for(int i=0; i<n_list.getLength(); i++) {
-			el = (Element) n_list.item(i);
-			for(int k=0; k< tagList.length; k++) {
-				sub_n_list = el.getElementsByTagName(tagList[k]);
-				for(int j=0; j<sub_n_list.getLength(); j++) {
-					sub_el = (Element) sub_n_list.item(j);
-					v_txt = sub_el.getFirstChild();
-					value = v_txt.getNodeValue();
-					
-					System.out.println(sub_el.getNodeName() + "::::value="+value);
-					if(sub_el.getAttributes().getNamedItem("id")!=null)
-					System.out.println("id="+ sub_el.getAttributes().getNamedItem("id").getNodeValue() );
-				}
-			}
-
-		}
-	}
-```
-
-
-
-
-
-
-
-
-
-
 

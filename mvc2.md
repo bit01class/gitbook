@@ -1,19 +1,31 @@
 # MVC2
 
-## FrontController 패턴
+
+
+### FrontController 패턴
 
 [http://codedragon.tistory.com/4743](http://codedragon.tistory.com/4743?category=196761)
 
-## Command 패턴
+###  
+
+### Command 패턴
 
 \*\*\*\*[**http://codedragon.tistory.com/4744**](http://codedragon.tistory.com/4744)\*\*\*\*
 
-## Maven
+
+
+
+
+
+
+
+
+### Maven
 
 * [Getting Started in 5 Minutes](https://maven.apache.org/guides/getting-started/maven-in-five-minutes.html)
 * [Getting Started in 30 Minutes](https://maven.apache.org/guides/getting-started/index.html)
 
-## Jetty Plugin
+### Jetty Plugin
 
 ```text
     <plugins>
@@ -36,10 +48,15 @@
     </plugins>
 ```
 
-## Servlet Filter
 
-{% code-tabs %}
-{% code-tabs-item title="MyFilter.java" %}
+
+
+
+### Servlet Filter
+
+
+
+{% code title="MyFilter.java" %}
 ```java
 import javax.servlet.Filter; 
 import javax.servlet.FilterChain; 
@@ -57,7 +74,7 @@ import org.slf4j.LoggerFactory;
 public class MyFilter implements Filter { 
     private static final Logger logger = LoggerFactory.getLogger(MyFilter.class); 
     private String encoding; 
-
+    
     @Override 
     public void init(FilterConfig config) throws ServletException { 
      logger.info("init call");
@@ -65,7 +82,7 @@ public class MyFilter implements Filter {
     /* 필터 실행 부분 */ 
     @Override 
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-
+     
      logger.info("before doFilter"); 
      chain.doFilter(request, response);
      logger.info("after doFilter"); 
@@ -76,11 +93,11 @@ public class MyFilter implements Filter {
      logger.info("destroy call"); 
     }
 ```
-{% endcode-tabs-item %}
-{% endcode-tabs %}
+{% endcode %}
 
-{% code-tabs %}
-{% code-tabs-item title="web.xml" %}
+
+
+{% code title="web.xml" %}
 ```markup
 <filter> 
 <filter-name>myFilter</filter-name> 
@@ -102,6 +119,25 @@ public class MyFilter implements Filter {
 - ERROR : 에러페이지에 적용(isErrorPage="true")
 -->
 ```
-{% endcode-tabs-item %}
-{% endcode-tabs %}
+{% endcode %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

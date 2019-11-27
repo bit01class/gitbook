@@ -1,5 +1,7 @@
 # linux \(ubuntu\)
 
+
+
 ### JDK
 
 ```text
@@ -34,6 +36,60 @@ drwxr-xr-x  2 root    root    4096  1월  1 00:00 policy
 drwxrwxr-x  3 tomcat8 tomcat8 4096  1월  1 00:00 webapps
 lrwxrwxrwx  1 root    root      19  1월  1 00:00 work -> ../../cache/tomcat8
 
+```
+
+
+
+
+
+### Apache
+
+```bash
+./configure --prefix=/usr/local/apache^
+	--enable-rewrite=shared^
+	--enable-proxy=shared
+sudo make
+sudo make install
+```
+
+cd native
+
+```bash
+./configure --with-apxs=/usr/local/apache/bin/apxs
+sudo make
+sudo make install
+```
+
+
+
+create workers.properties
+
+```bash
+worker.<name>.type=ajp13
+worker.<name>.port=<ajp port>
+worker.<name>.host=<tomcat ip addr>
+worker.list=<name>
+```
+
+edit apache httpd.conf
+
+```bash
+LoadModule jk_module modules/mod_jk.so
+
+JkWorkersFile conf/workers.properties
+
+JkMount /path <name> 
+```
+
+VirtualHost
+
+```bash
+Listen 80
+NameVirtualHost *:80
+<VirtualHost *:80>
+ServerName	www.domain.com
+JkMount	/path*	<dept_name>
+</VirtualHost>
 ```
 
 
@@ -199,6 +255,10 @@ DEFAULT_SERVICE_LISTENER = (XE)
 * cd /u01/app/oracle/product/11.2.0/xe/bin 
 * . ./oracle\_env.sh 
 * sqlplus /nolog conn sys as sysdba
+
+
+
+
 
 
 

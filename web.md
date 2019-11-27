@@ -1,9 +1,10 @@
 # WEB
 
-## JavaSocket webserver 구현
+### 
 
-{% code-tabs %}
-{% code-tabs-item title="SocketServer.java" %}
+### JavaSocket webserver 구현
+
+{% code title="SocketServer.java" %}
 ```java
 import java.io.*;
 import java.net.*;
@@ -12,90 +13,95 @@ import java.util.regex.*;
 public class SocketServer extends Thread{
 
     String notfound = ("HTTP/1.1 404 Not Found\r\n");
-    private String root="target/classes/www/";
-    private Socket client;
+	private String root="target/classes/www/";
+	private Socket client;
 
-    public SocketServer(Socket client) {
-        this.client=client;
-    }
+	public SocketServer(Socket client) {
+		this.client=client;
+	}
 
-    public static void main(String[] args) {
-
-        try {
-            ServerSocket socket=new ServerSocket(80);
-            while(true){
-            Socket client = socket.accept();
-
-            SocketServer server=new SocketServer(client);
-            server.run();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-    }
-
-    @Override
-    public void run() {
-        OutputStream os=null;
-        InputStream is=null;
-        DataOutputStream dos =null;
-        byte[] buf=new byte[1024];
-        try {
-            os = client.getOutputStream();
-            is = client.getInputStream();
-
-            InputStreamReader isr = new InputStreamReader(is);
-            BufferedReader br=new BufferedReader(isr);
-            String req=br.readLine();
-            if(req==null)return;
-            System.out.print(req+"::");
-            Matcher get = Pattern.compile("GET /?(\\S*).*").matcher(req);
-            if(get.matches()){
-                req=get.group(1);
-                System.out.print(req+"::");
-                String[] msgs=req.split("\\?");
-                System.out.println(msgs[0]);
-            dos = new DataOutputStream(os);
-
-
-            File file=new File(root+msgs[0]);
-            FileInputStream fis = new FileInputStream(file);
-            dos.write("HTTP/1.1 200 OK \r\n".getBytes());
-            dos.write("Content-Type:text/html;charset=utf-8\r\n".getBytes());
-            dos.write("\r\n".getBytes());
-
-            int su=fis.read(buf);
-            dos.write(buf,0,su);
-            }else{
-                dos.write(notfound.getBytes());
-                dos.write("\r\n".getBytes());
-            }
-        } catch (Exception e) {
-        } finally{
-            try {
-                is.close();
-                os.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
+	public static void main(String[] args) {
+		
+		try {
+			ServerSocket socket=new ServerSocket(80);
+			while(true){
+			Socket client = socket.accept();
+			
+			SocketServer server=new SocketServer(client);
+			server.run();
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
+	@Override
+	public void run() {
+		OutputStream os=null;
+		InputStream is=null;
+		DataOutputStream dos =null;
+		byte[] buf=new byte[1024];
+		try {
+			os = client.getOutputStream();
+			is = client.getInputStream();
+			
+			InputStreamReader isr = new InputStreamReader(is);
+			BufferedReader br=new BufferedReader(isr);
+			String req=br.readLine();
+			if(req==null)return;
+			System.out.print(req+"::");
+			Matcher get = Pattern.compile("GET /?(\\S*).*").matcher(req);
+			if(get.matches()){
+				req=get.group(1);
+				System.out.print(req+"::");
+				String[] msgs=req.split("\\?");
+				System.out.println(msgs[0]);
+			dos = new DataOutputStream(os);
+			
+			
+			File file=new File(root+msgs[0]);
+			FileInputStream fis = new FileInputStream(file);
+			dos.write("HTTP/1.1 200 OK \r\n".getBytes());
+			dos.write("Content-Type:text/html;charset=utf-8\r\n".getBytes());
+			dos.write("\r\n".getBytes());
+			
+			int su=fis.read(buf);
+			dos.write(buf,0,su);
+			}else{
+				dos.write(notfound.getBytes());
+				dos.write("\r\n".getBytes());
+			}
+		} catch (Exception e) {
+		} finally{
+			try {
+				is.close();
+				os.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
 
 }
-```
-{% endcode-tabs-item %}
-{% endcode-tabs %}
 
-## CGI 연동 자바웹개발
+```
+{% endcode %}
+
+
+
+### 
+
+### 
+
+### CGI 연동 자바웹개발
 
 * 아파치 서버 Apache 2.4.38 Win64 download
   * [https://www.apachelounge.com/download/](https://www.apachelounge.com/download/)
 * Install cygwin
   * [https://cygwin.com/install.html](https://cygwin.com/install.html)
 * Java program in cgi-bin folder
-  * {% code-tabs %}
-    {% code-tabs-item title="CgiTest.java" %}
+  * {% code title="CgiTest.java" %}
     ```java
     public class {
             public static void main(String[] args) {
@@ -107,24 +113,21 @@ public class SocketServer extends Thread{
             }
     }
     ```
-    {% endcode-tabs-item %}
-    {% endcode-tabs %}
+    {% endcode %}
 * In cgi-bin folder and Compile
   * ```bash
     Run javac CgiTest.java
     ```
 * Create test.cgi in cgi-bin folder
-  * {% code-tabs %}
-    {% code-tabs-item title="test.cgi" %}
+  * {% code title="test.cgi" %}
     ```bash
     #!C:\cygwin64\bin\bash.exe
     java -cp ./ CgiTest
+
     ```
-    {% endcode-tabs-item %}
-    {% endcode-tabs %}
+    {% endcode %}
 * Configure conf/httpd.conf and Allow cgi scripts execution
-  * {% code-tabs %}
-    {% code-tabs-item title="httpd.conf" %}
+  * {% code title="httpd.conf" %}
     ```bash
     LoadModule cgi_module modules/mod_cgi.so # remove(#)
 
@@ -135,13 +138,15 @@ public class SocketServer extends Thread{
     Require all granted
     </Directory>
     AddHandler cgi-script .cgi
+
     ```
-    {% endcode-tabs-item %}
-    {% endcode-tabs %}
+    {% endcode %}
 
-## 아파치 톰캣 연동\(window os\)
 
-### 아파치 설치\(window\)
+
+### 아파치 톰캣 연동\(window os\)
+
+#### 아파치 설치\(window\)
 
 * 공식 사이트에서는 32비트만 다운로드 지원함
   * [http://mirror.apache-kr.org//httpd/binaries/](http://mirror.apache-kr.org//httpd/binaries/)
@@ -150,8 +155,7 @@ public class SocketServer extends Thread{
 * mod\_jk & isapi\_redirect.dll download \(추후 톰캣 연동\)
 * C:\Apache24\conf\httpd.conf 수정
 
-  {% code-tabs %}
-  {% code-tabs-item title="httpd.conf" %}
+  {% code title="httpd.conf" %}
   ```bash
   Define SRVROOT "c:/Apache24"
   ServerRoot "${SRVROOT}"
@@ -159,8 +163,7 @@ public class SocketServer extends Thread{
   DocumentRoot "${SRVROOT}/htdocs"
   <Directory "${SRVROOT}/htdocs">
   ```
-  {% endcode-tabs-item %}
-  {% endcode-tabs %}
+  {% endcode %}
 
 * SETX PATH /m "%PATH%;C:\Apache24\bin;"
 * httpd -k install
@@ -168,18 +171,17 @@ public class SocketServer extends Thread{
   * httpd -k stop
   * httpd -k restart
 
-### 톰캣 설치
+#### 톰캣 설치
 
 * [https://tomcat.apache.org/download-80.cgi](https://tomcat.apache.org/download-80.cgi)
 * SETX CATALINA\_HOME /m "C:\apache-tomcat-8.5.38"
 * SETX PATH /m "%PATH%;%CATALINA\_HOME%\bin;"
 
-### 환경설정
+#### 환경설정
 
-* Apache 폴더-&gt;conf 폴더-&gt;**mod\_jk.conf**
+* Apache 폴더-&gt;conf 폴더-&gt;**mod\_jk.conf**  
 
-  {% code-tabs %}
-  {% code-tabs-item title="mod\_jk.conf" %}
+  {% code title="mod\_jk.conf" %}
   ```bash
     <IfModule mod_jk.c>
         JkWorkersFile "C:/Apache24/conf/workers.properties"
@@ -195,13 +197,11 @@ public class SocketServer extends Thread{
         JkRequestLogFormat "%w %V %T"
     </IfModule>
   ```
-  {% endcode-tabs-item %}
-  {% endcode-tabs %}
+  {% endcode %}
 
-* apache 폴더 -&gt; conf 폴더 -&gt; **httpd.conf**
+* apache 폴더 -&gt; conf 폴더 -&gt;  **httpd.conf**  
 
-  {% code-tabs %}
-  {% code-tabs-item title="httpd.conf " %}
+  {% code title="httpd.conf " %}
   ```bash
   # 확인
   # ServerName
@@ -213,13 +213,11 @@ public class SocketServer extends Thread{
   LoadModule jk_module modules/mod_jk.so
   Include conf/mod_jk.conf
   ```
-  {% endcode-tabs-item %}
-  {% endcode-tabs %}
+  {% endcode %}
 
-* apache 폴더 -&gt; conf 폴더 -&gt; **workers.properties**
+* apache 폴더 -&gt; conf 폴더 -&gt;  **workers.properties** 
 
-  {% code-tabs %}
-  {% code-tabs-item title="workers.properties" %}
+  {% code title="workers.properties" %}
   ```bash
   workers.tomcat_home="/apache-tomcat-8.5.38"
   workers.java_home="/Program Files/Java/jdk1.8.0_152"
@@ -229,12 +227,13 @@ public class SocketServer extends Thread{
   worker.ajp13.host=localhost
   worker.ajp13.type=ajp13
   ```
-  {% endcode-tabs-item %}
-  {% endcode-tabs %}
+  {% endcode %}
 
-## ubuntu
 
-### install apache
+
+### ubuntu
+
+#### install apache
 
 ```text
 apache2 -v
@@ -244,7 +243,7 @@ sudo /etc/init.d/apache2 start
 sudo service apache2 start
 ```
 
-### apache & tomcat 연동
+#### apache & tomcat 연동
 
 ```bash
 sudo apt-get install libapache2-mod-jk
@@ -254,11 +253,14 @@ sudo nano /etc/apache2/workers.properties
 sudo nano /etc/apache2/mods-available/jk.conf
 sudo nano /etc/apache2/sites-available/000-default.conf
 sudo nano /etc/tomcat8/server.xml
+
+
 ```
 
 * vi /etc/apache2/workers.properties
 
 ```perl
+
 workers.tomcat_home=/usr/share/tomcat8     
 workers.java_home=/usr/lib/jvm/java-8-openjdk-amd64 
 
@@ -270,6 +272,7 @@ worker.ajp13.port=8009
 worker.ajp13.host=localhost
 worker.ajp13.type=ajp13
 worker.ajp13.lbfactor = 20
+
 ```
 
 * vi /etc/apache2/mods-available/jk.conf
@@ -282,6 +285,7 @@ worker.ajp13.lbfactor = 20
     ###### 아래로 수정 #####
     #JkWorkersFile /etc/libapache2-mod-jk/workers.properties
     JkWorkersFile /etc/apache2/workers.properties
+
 ```
 
 * vi /etc/apache2/sites-available/000-default.conf
@@ -305,7 +309,13 @@ JkMount /* tomcat1
 port=8009 주석해제
 ```
 
-## tomcat  use HTTPS
+
+
+
+
+
+
+### tomcat  use HTTPS
 
 * create key file \(keystore\)
 * ```bash
@@ -327,31 +337,33 @@ port=8009 주석해제
   >
   ```
 * tomcat setting\(in **conf** directory\)
-* {% code-tabs %}
-  {% code-tabs-item title="server.xml" %}
+* {% code title="server.xml" %}
   ```markup
   <Connector port="443" protocol="HTTP/1.1" SSLEnabled="true"
-          maxThreads="150" scheme="https" secure="true"
-          clientAuth="false" sslProtocol="TLS" keystoreFile="/web/key.keystore"
-          keystorePass="123456" />
+  		maxThreads="150" scheme="https" secure="true"
+  		clientAuth="false" sslProtocol="TLS" keystoreFile="/web/key.keystore"
+  		keystorePass="123456" />
   ```
-  {% endcode-tabs-item %}
-  {% endcode-tabs %}
+  {% endcode %}
 * tomcat restart
-* [https://localhost](https://localhost)
+* https://localhost
 * 고급 -&gt; 안전하지 않은 페이지로 이동
 
-## 응답코드
+
+
+
+
+### 응답코드
 
 Response Code 에 따른 응답코드
 
-| **Response Class Code** | **Response Class 의미** | **설명** |
+|  **Response Class Code**  |  **Response Class 의미** |  **설명** |
 | :--- | :--- | :--- |
-| 1 | Informational \(정보\) | 리퀘스트를 받고, 처리 중에 있음. |
-| 2 | Success \(성공\) | 리퀘스트를 정상적으로 처리함. |
-| 3 | Redirection \(리디렉션\) | 리퀘스트 완료를 위해 추가 동작이 필요함. |
-| 4 | Client Error \(클라이언트 오류\) | 클라이언트 요청을 처리할 수 없어 오류 발생 |
-| 5 | Server Error \(서버 오류\) | 서버에서 처리를 하지 못하여 오류 발생 |
+|  1 |  Informational \(정보\) |  리퀘스트를 받고, 처리 중에 있음. |
+|  2 |  Success \(성공\) |  리퀘스트를 정상적으로 처리함. |
+|  3 |  Redirection \(리디렉션\) |  리퀘스트 완료를 위해 추가 동작이 필요함. |
+|  4 |  Client Error \(클라이언트 오류\) |  클라이언트 요청을 처리할 수 없어 오류 발생 |
+|  5 |  Server Error \(서버 오류\) |  서버에서 처리를 하지 못하여 오류 발생 |
 
 <table>
   <thead>
@@ -416,7 +428,7 @@ Response Code 에 따른 응답코드
       <td style="text-align:left">206</td>
       <td style="text-align:left">Partial Content</td>
       <td style="text-align:left">&#xC77C;&#xBD80;&#xBD84;</td>
-      <td style="text-align:left"><a href="https://zetawiki.com/wiki/Wget_%EC%9D%B4%EC%96%B4%EB%B0%9B%EA%B8%B0">wget &#xC774;&#xC5B4;&#xBC1B;&#xAE30;</a>
+      <td style="text-align:left"><a href="https://zetawiki.com/wiki/Wget_%EC%9D%B4%EC%96%B4%EB%B0%9B%EA%B8%B0">wget &#xC774;&#xC5B4;&#xBC1B;&#xAE30;</a> 
       </td>
     </tr>
     <tr>
@@ -474,7 +486,7 @@ Response Code 에 따른 응답코드
     </tr>
     <tr>
       <td style="text-align:left"></td>
-      <td style="text-align:left"><a href="https://zetawiki.com/wiki/404">404</a>
+      <td style="text-align:left"><a href="https://zetawiki.com/wiki/404">404</a> 
       </td>
       <td style="text-align:left">Not Found</td>
       <td style="text-align:left">&#xC694;&#xCCAD;&#xD55C; &#xD398;&#xC774;&#xC9C0;&#xAC00; &#xC5C6;&#xC74C;</td>
@@ -535,7 +547,8 @@ Response Code 에 따른 응답코드
       <td style="text-align:left"></td>
     </tr>
   </tbody>
-</table> \*\*200 번대 응답\\(Response\\) : 성공\\(Success\\)\*\*
+</table>  
+**200 번대 응답\(Response\) : 성공\(Success\)**
 
 <table>
   <thead>
@@ -568,7 +581,9 @@ Response Code 에 따른 응답코드
         &#xBC1B;&#xC558;&#xB2E4;&#xB294; &#xAC83;&#xC744; &#xC54C;&#xB824;&#xC90C;.</td>
     </tr>
   </tbody>
-</table>**300 번대 응답\(Response\) : 리디렉션\(Redirection\)**
+</table>  
+  
+**300 번대 응답\(Response\) : 리디렉션\(Redirection\)**
 
 <table>
   <thead>
@@ -626,7 +641,9 @@ Response Code 에 따른 응답코드
         &#xD568;.</td>
     </tr>
   </tbody>
-</table>**400 번대 응답\(Response\) : 클라이언트 에러 \(Client Error\)**
+</table>  
+  
+ **400 번대 응답\(Response\) : 클라이언트 에러 \(Client Error\)**
 
 <table>
   <thead>
@@ -686,7 +703,9 @@ Response Code 에 따른 응답코드
         &#xC0AC;&#xC6A9;&#xD568;.</td>
     </tr>
   </tbody>
-</table>**500 번대 응답\(Response\) : 서버 에러 \(Server Error\)**
+</table>  
+  
+**500 번대 응답\(Response\) : 서버 에러 \(Server Error\)**
 
 <table>
   <thead>
@@ -724,37 +743,44 @@ Response Code 에 따른 응답코드
         &#xC54A;&#xB294; &#xC694;&#xCCAD;&#xC784;&#xC744; &#xC54C;&#xB824;&#xC90C;.</td>
     </tr>
   </tbody>
-</table>출처: [https://ko.wikipedia.org/wiki/HTTP\_%EC%83%81%ED%83%9C\_%EC%BD%94%EB%93%9C](https://ko.wikipedia.org/wiki/HTTP_상태_코드)
+</table>  
+  
+출처: [https://ko.wikipedia.org/wiki/HTTP\_%EC%83%81%ED%83%9C\_%EC%BD%94%EB%93%9C](https://ko.wikipedia.org/wiki/HTTP_%EC%83%81%ED%83%9C_%EC%BD%94%EB%93%9C)
 
-## 버전별 web.xml 스키마
+
+
+
+
+### 버전별 web.xml 스키마 
 
 * [ ] 2.5
 
-{% code-tabs %}
-{% code-tabs-item title="web.xml" %}
+{% code title="web.xml" %}
 ```markup
 <?xml version="1.0" encoding="UTF-8"?> 
 <web-app xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" id="WebApp_ID" version="2.5"> 
 
-</web-app>
+</web-app> 
+
+
 ```
-{% endcode-tabs-item %}
-{% endcode-tabs %}
+{% endcode %}
 
 * [ ] 3.x
 
-{% code-tabs %}
-{% code-tabs-item title="web.xml" %}
+{% code title="web.xml" %}
 ```markup
 <?xml version="1.0" encoding="UTF-8"?> 
 <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" id="WebApp_ID" version="3.0"> 
 
 </web-app>
-```
-{% endcode-tabs-item %}
-{% endcode-tabs %}
 
-## port check
+```
+{% endcode %}
+
+
+
+### port check
 
 ```text
 netstat -ano
@@ -764,9 +790,12 @@ netstat -ano
   - SYN_SENT : 접속하기 위해 패킷을 보냈다는 뜻
 
 taskkill /pid 0000 (taskkill -f /pid 0000)
+
 ```
 
-## Put Parameter
+
+
+### Put Parameter
 
 * call
 
@@ -780,14 +809,18 @@ curl  -X PUT ^
 
 ```text
 protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		
+		BufferedReader br = new BufferedReader(new InputStreamReader(req.getInputStream()));
 
-        BufferedReader br = new BufferedReader(new InputStreamReader(req.getInputStream()));
-
-        String data = br.readLine();
+		String data = br.readLine();
 }
 ```
 
-## 파비콘\(favicon\) 설정
+
+
+
+
+### 파비콘\(favicon\) 설정
 
 프로젝트 루트 디렉토리에 16x16 과 32x32의 이미지를 하나에 품은\(multiple sizes\) 혹은 단일 사이즈의 favicon.ico 파일을 업로드
 
@@ -806,5 +839,16 @@ protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws Se
 <meta name="theme-color" content="#ffffff">
 
 </head>
+
 ```
+
+
+
+
+
+
+
+
+
+
 
